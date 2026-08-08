@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Portfolio — Python / JS разработчик</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">Dev<span>Portfolio</span></a>
+            <div class="nav-links">
+                <a href="#about">Обо мне</a>
+                <a href="#projects">Проекты</a>
+                <a href="#skills">Навыки</a>
+                <a href="#contact">Контакты</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>Python &amp; JS<br>разработчик</h1>
+            <p>Пишу Telegram-ботов, веб-приложения и игры. Беру заказы на фриланс.</p>
+            <a href="#projects" class="hero-btn">Смотреть работы</a>
+            <a href="#contact" class="hero-btn ghost">Связаться</a>
+        </div>
+    </header>
+
+    <section id="about" class="section">
+        <div class="container">
+            <h2>Обо мне</h2>
+            <p class="lead">
+                Начинающий, но практикующий разработчик. Имею реальные проекты на Python (discord.py, pygame)
+                и JavaScript (HTML/CSS/Node.js). Умею доводить задачу до рабочего результата, а не только
+                «написать код». Работаю честно, сдаю в срок.
+            </p>
+        </div>
+    </section>
+
+    <section id="projects" class="section dark">
+        <div class="container">
+            <h2>Проекты</h2>
+            <div class="cards" id="projectGrid"></div>
+        </div>
+    </section>
+
+    <section id="skills" class="section">
+        <div class="container">
+            <h2>Навыки</h2>
+            <div class="skills-grid">
+                <div class="skill"><span class="skill-name">Python</span><span class="skill-lvl">discord.py, pygame, aiogram</span></div>
+                <div class="skill"><span class="skill-name">JavaScript</span><span class="skill-lvl">HTML, CSS, Node.js</span></div>
+                <div class="skill"><span class="skill-name">Backend</span><span class="skill-lvl">Express, WebSocket, REST</span></div>
+                <div class="skill"><span class="skill-name">Frontend</span><span class="skill-lvl">Адаптивная вёрстка, SPA</span></div>
+                <div class="skill"><span class="skill-name">Боты</span><span class="skill-lvl">Telegram, Discord, модерация</span></div>
+                <div class="skill"><span class="skill-name">Игры</span><span class="skill-lvl">Pygame (2D, аркады)</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="section dark">
+        <div class="container">
+            <h2>Контакты</h2>
+            <p class="lead">Пишите — обсудим задачу и сроки.</p>
+            <div class="contacts">
+                <a href="https://t.me/your_telegram" class="contact-btn">Telegram</a>
+                <a href="mailto:you@example.com" class="contact-btn">Email</a>
+                <a href="https://github.com/kibert117" class="contact-btn">GitHub</a>
+            </div>
+            <p class="note">Замените ссылки на свои в файле index.html (строки с your_telegram / kibert117 / you@example.com).</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© <span id="year"></span> Dev Portfolio. Собрано на коленке, но работает.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

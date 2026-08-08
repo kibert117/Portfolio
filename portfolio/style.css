@@ -1,0 +1,106 @@
+:root {
+    --bg: #0d1117;
+    --bg-alt: #161b22;
+    --card: #1c2333;
+    --accent: #0071e3;
+    --accent2: #5856d6;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --border: #30363d;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* Navbar */
+.navbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,17,23,.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+}
+.nav-container {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+}
+.logo { font-weight: 700; font-size: 20px; }
+.logo span { color: var(--accent); }
+.nav-links a { margin-left: 22px; color: var(--muted); transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+
+/* Hero */
+.hero {
+    position: relative; overflow: hidden;
+    padding: 120px 20px 100px;
+    text-align: center;
+}
+.hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(88,86,214,.25), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0,113,227,.2), transparent 50%);
+}
+.hero-content { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; }
+.hero h1 { font-size: 52px; line-height: 1.1; margin-bottom: 18px; }
+.hero p { color: var(--muted); font-size: 19px; margin-bottom: 30px; }
+.hero-btn {
+    display: inline-block; padding: 13px 28px; margin: 6px;
+    background: var(--accent); color: #fff; border-radius: 10px;
+    font-weight: 600; transition: transform .15s, background .2s;
+}
+.hero-btn:hover { transform: translateY(-2px); background: #0a84ff; }
+.hero-btn.ghost { background: transparent; border: 1px solid var(--border); }
+.hero-btn.ghost:hover { background: var(--bg-alt); }
+
+/* Sections */
+.section { padding: 80px 20px; }
+.section.dark { background: var(--bg-alt); }
+.container { max-width: 1100px; margin: 0 auto; }
+.section h2 { font-size: 34px; margin-bottom: 30px; text-align: center; }
+.lead { color: var(--muted); font-size: 18px; max-width: 760px; margin: 0 auto; text-align: center; }
+
+/* Project cards */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+.card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    padding: 24px; transition: transform .15s, border-color .2s;
+}
+.card:hover { transform: translateY(-4px); border-color: var(--accent); }
+.card-icon { font-size: 34px; margin-bottom: 12px; }
+.card h3 { font-size: 21px; margin-bottom: 8px; }
+.card p { color: var(--muted); font-size: 15px; margin-bottom: 14px; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.tag { background: rgba(0,113,227,.15); color: var(--accent); padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+.card-link { color: var(--accent); font-weight: 600; font-size: 14px; }
+
+/* Skills */
+.skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.skill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+.skill-name { display: block; font-weight: 700; font-size: 17px; }
+.skill-lvl { display: block; color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+/* Contact */
+.contacts { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 26px 0 10px; }
+.contact-btn {
+    padding: 12px 26px; border: 1px solid var(--border); border-radius: 10px;
+    font-weight: 600; transition: background .2s, border-color .2s;
+}
+.contact-btn:hover { background: var(--card); border-color: var(--accent); }
+.note { color: var(--muted); font-size: 13px; text-align: center; margin-top: 8px; }
+
+/* Footer */
+.footer { text-align: center; padding: 30px 20px; color: var(--muted); border-top: 1px solid var(--border); font-size: 14px; }
+
+@media (max-width: 600px) {
+    .hero h1 { font-size: 38px; }
+    .nav-links a { margin-left: 14px; font-size: 14px; }
+    .section { padding: 56px 16px; }
+}

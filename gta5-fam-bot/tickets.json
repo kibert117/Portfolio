@@ -1,0 +1,55 @@
+{
+  "tickets": [
+    {
+      "id": 1,
+      "user_id": 1459356419265527880,
+      "user_name": "unstealing",
+      "channel_id": 1523311306176725013,
+      "status": "rejected",
+      "created_at": "05.07.2026 15:55",
+      "rejected_by": "unstealing"
+    },
+    {
+      "id": 2,
+      "user_id": 1266906860636868750,
+      "user_name": "xd.xixi",
+      "channel_id": 1523311964997025932,
+      "status": "rejected",
+      "created_at": "05.07.2026 15:57",
+      "rejected_by": "unstealing"
+    },
+    {
+      "id": 3,
+      "user_id": 1266906860636868750,
+      "user_name": "xd.xixi",
+      "channel_id": 1523314264931172425,
+      "status": "rejected",
+      "created_at": "05.07.2026 16:07"
+    },
+    {
+      "id": 4,
+      "user_id": 1266906860636868750,
+      "user_name": "xd.xixi",
+      "channel_id": 1523315846481576068,
+      "status": "rejected",
+      "created_at": "05.07.2026 16:13"
+    },
+    {
+      "id": 5,
+      "user_id": 1266906860636868750,
+      "user_name": "xd.xixi",
+      "channel_id": 1523315911136907445,
+      "status": "rejected",
+      "created_at": "05.07.2026 16:13"
+    },
+    {
+      "id": 6,
+      "user_id": 1266906860636868750,
+      "user_name": "xd.xixi",
+      "channel_id": 1523315963313913876,
+      "status": "rejected",
+      "created_at": "05.07.2026 16:13"
+    }
+  ],
+  "counter": 6
+}

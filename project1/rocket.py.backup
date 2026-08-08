@@ -1,0 +1,340 @@
+import pygame
+import sys
+import math
+import random
+
+# Инициализация
+pygame.init()
+pygame.display.set_caption("LAUNCH — Rocket Crash Simulator (Python)")
+clock = pygame.time.Clock()
+
+# Настройки
+WIDTH, HEIGHT = 920, 720
+FPS = 60
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+canvas = screen
+
+# Цвета
+COLORS = {
+    "bg": (11, 14, 20),
+    "panel": (20, 25, 34),
+    "panel2": (25, 31, 43),
+    "line": (38, 46, 61),
+    "orange": (255, 107, 53),
+    "gold": (255, 183, 3),
+    "cyan": (76, 201, 240),
+    "red": (255, 77, 94),
+    "text": (230, 233, 239),
+    "dim": (136, 145, 163),
+    "green": (124, 240, 160),
+    "chip1": (85, 95, 114),
+    "chip2": (255, 140, 150),
+    "chip3": (76, 201, 240),
+    "chip4": (255, 183, 3),
+    "chip5": (181, 23, 158),
+}
+
+# Шрифты (используем системные, близкие по стилю)
+font_main = pygame.font.SysFont("segoeui", 26, bold=True)
+font_huge = pygame.font.SysFont("segoeui", 56, bold=True)
+font_code = pygame.font.SysFont("consolas", 16, bold=True)
+font_small = pygame.font.SysFont("segoeui", 12, bold=True)
+font_caption = pygame.font.SysFont("segoeui", 10, bold=True)
+font_stats = pygame.font.SysFont("consolas", 15, bold=True)
+font_btn = pygame.font.SysFont("segoeui", 16, bold=True)
+
+# Эффекты и звуки (синтез без файлов)
+def create_beep(freq, duration, volume=0.15, type="sine"):
+    sample_rate = 22050
+    n_samples = int(sample_rate * duration)
+    buf = pygame.sndarray.make_sound(
+        pygame.sndarray.array([(int(32767 * volume * math.sin(2 * math.pi * freq * t / sample_rate))) for t in range(n_samples)])
+    )
+    return buf
+
+# Базовые звуки
+SOUND = {
+    "tick": [create_beep(380 + i * 70, 0.09, 0.09, "square") for i in range(5)],
+    "cashout": [create_beep(f, 0.18, 0.15, "sine") for f in [660, 880, 1100]],
+    "win": create_beep(523, 0.4, 0.2, "triangle"),
+    "lose": create_beep(150, 0.5, 0.2, "sawtooth"),
+    "blip": create_beep(880, 0.05, 0.05, "sine"),
+}
+
+# Состояние игры
+class Game:
+    def __init__(self):
+        self.state = "waiting"  # waiting, flying, ended
+        self.balance = 1000
+        self.bet = 50
+        self.crash_point = 1.00
+        self.current_mult = 1.00
+        self.wait_remaining = 20
+        self.wait_start_time = 0
+        self.path = []  # [(elapsed, mult), ...]
+        self.particles = []
+        self.trail = []
+        self.history = []
+        self.bot_list = []
+        self.bet_placed = False
+        self.cashed_out = False
+        self.cashed_mult = 0.0
+        self.muted = False
+        self.forced_crash = None
+        self.last_bot_update = 0
+        self.promo_msg = "Попробуйте код ROCKET"
+        self.promo_color = COLORS["gold"]
+
+        # Статистика
+        self.stats = {
+            "turnover": 0,
+            "max_win": 1.00,
+            "cashes": 0,
+            "profit": 0,
+        }
+        self.achievements = {
+            "ach1": False,  # X >= 2.00
+            "ach2": False,  # X >= 10.00
+            "ach3": False,  # ставка >= 1000
+            "ach4": False,  # промо ROCKET
+        }
+
+        # Оверлеи
+        self.show_meme = None  # "win", "lose"
+        self.meme_text = ""
+
+        # Админка
+        self.admin_active = False
+
+        # Запуск
+        self.start_wait()
+
+    def start_wait(self):
+        self.state = "waiting"
+        self.wait_remaining = 20
+        self.wait_start_time = pygame.time.get_ticks()
+        self.path = []
+        self.particles = []
+        self.trail = []
+        self.crash_point = 1.00
+        self.current_mult = 1.00
+        self.bet_placed = False
+        self.cashed_out = False
+        self.show_meme = None
+        self.generate_bots()
+        # Задержка 20 секунд
+        self.timer_delay = 20  # в игровых тактах (обновлений)
+
+    def start_flight(self):
+        self.state = "flying"
+        if self.forced_crash is not None:
+            self.crash_point = self.forced_crash
+            self.forced_crash = None
+        else:
+            self.crash_point = max(1.00, min(0.97 / (1 - random.random()), 50))
+        self.path = [{"t": 0, "m": 1.0}]
+        self.current_mult = 1.0
+        self.timer_delay = None
+
+        # Сброс ботов
+        for b in self.bot_list:
+            b["status"] = "pending"
+            b["cashed"] = None
+
+    def end_flight(self):
+        self.state = "ended"
+        # Закрытие ставок
+        for b in self.bot_list:
+            if b["status"] == "pending":
+                b["status"] = "lost"
+                b["cashed"] = "авария"
+
+        # Частицы взрыва
+        if self.path:
+            last = self.path[-1]
+            x = self.get_x(last["t"])
+            y = self.get_y(last["m"])
+            self.create_explosion(x, y)
+
+        # Мемы и эффекты
+        if self.bet_placed and not self.cashed_out:
+            self.show_meme = "lose"
+            self.meme_text = "Ракета сделала БУМ 💥"
+            if not self.muted:
+                SOUND["lose"].play()
+        elif self.bet_placed and self.cashed_out:
+            self.show_meme = "win"
+            win_text = random.choice([
+                "Инвестор от бога 📈", "Мамкин трейдер в плюсе 😎", "Илон Маск плачет в сторонке 🚀", "Симуляция взломана 💰"
+            ])
+            self.meme_text = f"{win_text} (+{int(self.bet * self.cashed_mult)}) кр."
+            if not self.muted:
+                SOUND["win"].play()
+
+        # Статистика
+        self.stats["turnover"] += self.bet if self.bet_placed else 0
+        if self.bet_placed and self.cashed_out:
+            self.stats["cashes"] += 1
+            if self.cashed_mult > self.stats["max_win"]:
+                self.stats["max_win"] = self.cashed_mult
+            self.unlock_achievement("ach1", self.cashed_mult >= 2.00)
+            self.unlock_achievement("ach2", self.cashed_mult >= 10.00)
+        self.stats["profit"] = self.balance - 1000  # 1000 — стартовый баланс
+
+        # Добавление чипа в историю
+        self.history.append(self.crash_point)
+        if len(self.history) > 14:
+            self.history.pop(0)
+        self.unlock_achievement("ach3", self.bet >= 1000)
+
+        # Таймер перед следующим раундом
+        self.timer_delay = 4 * FPS  # ~4 секунды
+
+    def update(self):
+        now = pygame.time.get_ticks()
+        if self.state == "waiting":
+            elapsed = (now - self.wait_start_time) / 1000
+            self.wait_remaining = max(0, 20 - elapsed)
+            if self.wait_remaining <= 0:
+                self.start_flight()
+
+        elif self.state == "flying":
+            elapsed = (now - self.wait_start_time) / 1000
+            self.current_mult = math.exp(0.16 * elapsed)
+            self.path.append({"t": elapsed, "m": self.current_mult})
+
+            if self.current_mult >= self.crash_point:
+                self.current_mult = self.crash_point
+                self.wait_start_time = now  # для следующего этапа
+                self.end_flight()
+
+        elif self.state == "ended":
+            if self.timer_delay is not None:
+                self.timer_delay -= 1
+                if self.timer_delay <= 0:
+                    self.start_wait()
+
+        # Обновление ботов
+        if self.state == "flying" and now - self.last_bot_update > 50:  # каждые 50мс
+            self.last_bot_update = now
+            for b in self.bot_list:
+                if b["status"] == "pending" and b["target"] <= self.current_mult and b["target"] < self.crash_point:
+                    b["status"] = "won"
+                    b["cashed"] = b["target"]
+
+        # Обновление частиц
+        self.update_particles()
+
+    def create_explosion(self, x, y):
+        for _ in range(50):
+            angle = random.uniform(0, math.pi * 2)
+            speed = random.uniform(2, 5)
+            self.particles.append({
+                "x": x, "y": y,
+                "vx": math.cos(angle) * speed,
+                "vy": math.sin(angle) * speed,
+                "alpha": 1.0,
+                "size": random.uniform(2, 5)
+            })
+
+    def update_particles(self):
+        # Частицы взрыва
+        new_p = []
+        for p in self.particles:
+            p["x"] += p["vx"]
+            p["y"] += p["vy"]
+            p["alpha"] -= 0.03
+            p["size"] *= 0.97
+            if p["alpha"] > 0:
+                new_p.append(p)
+        self.particles = new_p
+
+        # След за ракетой (только при полёте)
+        if self.state == "flying" and len(self.path) > 1:
+            last = self.path[-1]
+            prev = self.path[-2]
+            dx = self.get_x(last["t"]) - self.get_x(prev["t"])
+            dy = self.get_y(last["m"]) - self.get_y(prev["m"])
+            angle = math.atan2(dy, dx)
+            for _ in range(2):
+                self.trail.append({
+                    "x": self.get_x(last["t"]) - dx * 0.4,
+                    "y": self.get_y(last["m"]) - dy * 0.4,
+                    "vx": -math.cos(angle) * 1.5 + random.uniform(-0.75, 0.75),
+                    "vy": -math.sin(angle) * 1.5 + random.uniform(-0.75, 0.75),
+                    "alpha": 0.8,
+                    "size": 4 + random.uniform(0, 5)
+                })
+
+        # Очистка следа
+        self.trail = [t for t in self.trail if t["alpha"] > 0]
+        for t in self.trail:
+            t["x"] += t["vx"]
+            t["y"] += t["vy"]
+            t["alpha"] -= 0.015
+            t["size"] += 0.09
+
+    def draw(self):
+        screen.fill(COLORS["bg"])
+
+        # Панели
+        # Верхняя панель
+        pygame.draw.rect(screen, COLORS["panel"], (0, 0, WIDTH, 100))
+        pygame.draw.line(screen, COLORS["line"], (0, 95), (WIDTH, 95), 1)
+
+        # Логотип и управление
+        self.draw_header()
+
+        # Центр — канвас игры
+        pygame.draw.rect(screen, COLORS["panel2"], (20, 110, WIDTH - 40, 380), border_radius=12)
+        pygame.draw.line(screen, COLORS["line"], (20, 480), (WIDTH - 20, 480), 1)
+
+        # Канвас: сетка, звёзды, ракета, мемы
+        self.draw_game_canvas()
+
+        # История
+        pygame.draw.rect(screen, COLORS["panel"], (20, 490, WIDTH - 40, 40))
+        self.draw_history()
+
+        # Боты и игроки
+        pygame.draw.rect(screen, COLORS["panel2"], (20, 530, WIDTH - 40, 160), border_radius=12)
+        self.draw_players_panel()
+
+        # Панель управления
+        pygame.draw.rect(screen, COLORS["panel"], (20, 700 - 100, WIDTH - 40, 100), border_bottom_left_radius=12, border_bottom_right_radius=12)
+        self.draw_controls()
+
+        # Промо
+        pygame.draw.rect(screen, COLORS["panel"], (0, HEIGHT - 60, WIDTH, 60))
+        self.draw_promo()
+
+        # Админка
+        if self.admin_active:
+            self.draw_admin_panel()
+
+        # Мемы
+        if self.show_meme:
+            self.draw_meme()
+
+        # Звуки
+        if self.state == "flying":
+            # Частота звука зависит от мультипликатора
+            freq = int(220 + min(self.current_mult, 10) * 40)
+            # Это синтезировать в реальном времени сложно, используем тик
+            # Для простоты — просто не будем проигрывать непрерывный тон в этой версии
+
+        pygame.display.flip()
+
+    def draw_header(self):
+        # Логотип
+        logo = font_main.render("LAUNCH", True, COLORS["orange"])
+        screen.blit(logo, (24, 16))
+        sub = font_small.render("Игровые кредиты • Симулятор", True, COLORS["gold"])
+        screen.blit(sub, (logo.get_width() + 30, 22))
+
+        # Правая часть
+        pygame.draw.rect(screen, COLORS["line"], (WIDTH - 180, 16, 150, 36), border_radius=6)
+        bal_text = font_stats.render(f"{int(self.balance)} кр.", True, COLORS["cyan"])
+        screen.blit(bal_text, (WIDTH - 170, 23))
+
+        # Админ/Мут

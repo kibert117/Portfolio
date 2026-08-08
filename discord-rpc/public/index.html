@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discord RPC Manager</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+<style>
+:root {
+    --bg-primary: #313338;
+    --bg-secondary: #2b2d31;
+    --bg-tertiary: #1e1f22;
+    --bg-card: #232428;
+    --border: #3f4147;
+    --text-primary: #fff;
+    --text-secondary: #b5bac1;
+    --text-muted: #6d6f78;
+    --accent: #5865f2;
+    --accent-hover: #4752c4;
+    --green: #57f287;
+    --green-hover: #3ba55c;
+    --red: #ed4245;
+    --red-hover: #a12d2f;
+    --yellow: #fee75c;
+    --orange: #f0b232;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height:100vh; overflow-x:hidden; }
+::selection { background: var(--accent); color: #fff; }
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background: var(--bg-tertiary); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+.container { max-width:960px; margin:0 auto; padding:16px; }
+
+header { text-align:center; padding:32px 0 24px; position:relative; }
+header h1 { font-size:32px; background:linear-gradient(135deg, var(--accent), #eb459e); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+header p { color:var(--text-secondary); margin-top:6px; font-size:14px; }
+.header-version { position:absolute; top:12px; right:0; font-size:11px; color:var(--text-muted); background:var(--bg-secondary); padding:4px 10px; border-radius:12px; }
+
+/* Toasts */
+.toast-container { position:fixed; top:20px; right:20px; z-index:9999; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+.toast { padding:12px 20px; border-radius:var(--radius-sm); color:#fff; font-size:14px; font-weight:500; pointer-events:auto; animation:slideIn .3s ease, fadeOut .3s ease 3.7s forwards; box-shadow:var(--shadow); max-width:400px; }
+.toast-success { background:var(--green); color:#000; }
+.toast-error { background:var(--red); }
+.toast-info { background:var(--accent); }
+@keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+@keyframes fadeOut { from { opacity:1; } to { opacity:0; transform:translateX(50px); } }
+
+/* Status bar */
+.status-bar { display:flex; align-items:center; gap:14px; padding:14px 20px; background:var(--bg-secondary); border-radius:var(--radius); margin-bottom:20px; border:1px solid var(--border); transition:all .3s; }
+.status-bar.connected { border-color:rgba(87,242,135,.3); }
+.status-dot { width:12px; height:12px; border-radius:50%; background:var(--red); transition:all .4s; flex-shrink:0; }
+.status-dot.connected { background:var(--green); box-shadow:0 0 12px var(--green); animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100% { box-shadow:0 0 12px var(--green); } 50% { box-shadow:0 0 20px var(--green); } }
+.status-text { font-size:14px; color:var(--text-secondary); flex:1; }
+.status-actions { display:flex; gap:8px; }
+
+/* Sections */
+.section { background:var(--bg-secondary); border-radius:var(--radius); padding:24px; margin-bottom:16px; border:1px solid transparent; transition:border-color .3s; }
+.section:hover { border-color:rgba(88,101,242,.15); }
+.section h2 { font-size:17px; color:var(--text-primary); margin-bottom:16px; display:flex; align-items:center; gap:8px; }
+.section h2 .icon { font-size:20px; }
+.section-header { display:flex; justify-content:space-between; align-items:center; }
+
+/* Forms */
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:12px; color:var(--text-secondary); margin-bottom:5px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+.form-group input, .form-group textarea, .form-group select {
+    width:100%; padding:11px 14px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm);
+    color:var(--text-primary); font-size:14px; font-family:inherit; transition:all .2s; outline:none;
+}
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(88,101,242,.15); }
+.form-group textarea { resize:vertical; min-height:60px; }
+.form-group .hint { font-size:12px; color:var(--text-muted); margin-top:4px; }
+.form-group .hint a { color:var(--accent); text-decoration:none; }
+.form-group .hint a:hover { text-decoration:underline; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.char-count { font-size:11px; color:var(--text-muted); text-align:right; margin-top:2px; }
+.char-count.warn { color:var(--orange); }
+.char-count.over { color:var(--red); }
+
+/* Buttons */
+.btn { padding:10px 20px; border:none; border-radius:var(--radius-sm); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; font-family:inherit; display:inline-flex; align-items:center; gap:6px; }
+.btn:active { transform:scale(.97); }
+.btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.btn-primary { background:var(--accent); color:#fff; }
+.btn-primary:hover:not(:disabled) { background:var(--accent-hover); }
+.btn-success { background:var(--green); color:#000; }
+.btn-success:hover:not(:disabled) { background:var(--green-hover); }
+.btn-danger { background:var(--red); color:#fff; }
+.btn-danger:hover:not(:disabled) { background:var(--red-hover); }
+.btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border); }
+.btn-secondary:hover:not(:disabled) { background:var(--border); }
+.btn-ghost { background:transparent; color:var(--text-secondary); padding:6px 12px; }
+.btn-ghost:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+.btn-sm { padding:6px 14px; font-size:12px; }
+.btn-group { display:flex; gap:10px; flex-wrap:wrap; }
+.btn-icon { width:36px; height:36px; padding:0; display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:16px; }
+
+/* Loading */
+.spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; border-radius:50%; animation:spin .6s linear infinite; }
+.spinner-dark { border-color:rgba(0,0,0,.2); border-top-color:#000; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* Discord Preview */
+.preview { background:var(--bg-tertiary); border-radius:var(--radius); padding:16px; margin-top:16px; border:1px solid var(--border); }
+.preview-title { font-size:11px; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:.5px; font-weight:600; }
+.discord-card { background:var(--bg-card); border-radius:var(--radius-sm); padding:12px; display:flex; gap:12px; border:1px solid rgba(0,0,0,.2); }
+.discord-avatar { width:42px; height:42px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; overflow:hidden; }
+.discord-avatar img { width:100%; height:100%; object-fit:cover; }
+.discord-info { flex:1; min-width:0; }
+.discord-name { font-size:14px; font-weight:600; }
+.discord-status { font-size:12px; color:var(--text-secondary); }
+.discord-activity { margin-top:8px; padding-top:8px; border-top:1px solid var(--border); display:flex; gap:10px; }
+.discord-activity-img { width:48px; height:48px; border-radius:6px; background:var(--accent); flex-shrink:0; overflow:hidden; display:flex; align-items:center; justify-content:center; font-size:22px; }
+.discord-activity-img img { width:100%; height:100%; object-fit:cover; }
+.discord-activity-text { font-size:12px; color:var(--text-secondary); line-height:1.4; }
+.discord-activity-text strong { color:var(--text-primary); font-weight:600; }
+.discord-activity-text em { color:var(--accent); font-style:normal; }
+.discord-timer { font-size:11px; color:var(--text-secondary); margin-top:4px; font-variant-numeric:tabular-nums; }
+.discord-buttons { margin-top:8px; display:flex; gap:6px; }
+.discord-btn { padding:4px 12px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:4px; font-size:12px; color:var(--text-primary); }
+
+/* Accordion */
+.accordion { border:1px solid var(--border); border-radius:var(--radius-sm); overflow:hidden; margin-top:14px; }
+.accordion-header { padding:12px 16px; background:var(--bg-tertiary); cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background .2s; user-select:none; }
+.accordion-header:hover { background:var(--bg-card); }
+.accordion-title { font-size:14px; font-weight:600; }
+.accordion-arrow { transition:transform .3s; color:var(--text-muted); }
+.accordion.open .accordion-arrow { transform:rotate(180deg); }
+.accordion-body { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+.accordion.open .accordion-body { max-height:3000px; }
+.accordion-content { padding:16px; }
+
+/* Upload */
+.upload-zone { border:2px dashed var(--border); border-radius:var(--radius-sm); padding:16px; text-align:center; cursor:pointer; transition:all .2s; }
+.upload-zone:hover { border-color:var(--accent); background:rgba(88,101,242,.05); }
+.upload-zone.dragover { border-color:var(--accent); background:rgba(88,101,242,.12); transform:scale(1.01); }
+.upload-zone input { display:none; }
+.upload-zone-text { font-size:13px; color:var(--text-secondary); }
+.upload-zone-text span { color:var(--accent); font-weight:600; }
+.image-preview-box { width:56px; height:56px; border-radius:50%; overflow:hidden; background:var(--bg-tertiary); display:flex; align-items:center; justify-content:center; flex-shrink:0; border:2px solid var(--border); transition:border-color .2s; }
+.image-preview-box img { width:100%; height:100%; object-fit:cover; }
+
+/* Gallery */
+.gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(72px,1fr)); gap:8px; margin-top:10px; }
+.gallery-item { position:relative; width:100%; aspect-ratio:1; border-radius:var(--radius-sm); overflow:hidden; cursor:pointer; border:2px solid transparent; transition:all .2s; }
+.gallery-item:hover { border-color:var(--accent); transform:scale(1.05); }
+.gallery-item img { width:100%; height:100%; object-fit:cover; }
+.gallery-item .delete-btn { position:absolute; top:2px; right:2px; background:var(--red); color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:10px; cursor:pointer; display:none; align-items:center; justify-content:center; line-height:1; }
+.gallery-item:hover .delete-btn { display:flex; }
+.gallery-empty { font-size:13px; color:var(--text-muted); text-align:center; padding:20px; }
+
+/* Tabs */
+.tabs { display:flex; gap:2px; background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:3px; margin-bottom:16px; }
+.tab { flex:1; padding:8px 16px; text-align:center; font-size:13px; font-weight:600; border-radius:6px; cursor:pointer; transition:all .2s; color:var(--text-secondary); }
+.tab:hover { color:var(--text-primary); }
+.tab.active { background:var(--accent); color:#fff; }
+
+/* Presets */
+.preset-category { margin-bottom:14px; }
+.preset-category-title { font-size:11px; color:var(--accent); text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:6px; padding-left:2px; }
+.presets { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:6px; }
+.preset { padding:8px 10px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all .2s; text-align:center; }
+.preset:hover { border-color:var(--accent); background:var(--bg-card); transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.2); }
+.preset-name { font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.preset-desc { font-size:10px; color:var(--text-muted); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Search */
+.search-box { position:relative; margin-bottom:12px; }
+.search-box input { padding-left:36px; }
+.search-box .search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:14px; pointer-events:none; }
+
+/* Instruction */
+.instruction-steps { counter-reset:step; }
+.instruction-step { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+.instruction-step:last-child { border-bottom:none; }
+.step-number { counter-increment:step; width:28px; height:28px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; flex-shrink:0; }
+.step-number::before { content:counter(step); }
+.step-text { flex:1; font-size:13px; color:var(--text-secondary); line-height:1.5; }
+.step-text a { color:var(--accent); text-decoration:none; }
+.step-text a:hover { text-decoration:underline; }
+.step-text strong { color:var(--text-primary); }
+
+/* History */
+.history-list { display:flex; flex-direction:column; gap:6px; max-height:300px; overflow-y:auto; }
+.history-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); cursor:pointer; transition:all .2s; }
+.history-item:hover { border-color:var(--accent); background:var(--bg-card); }
+.history-item-info { flex:1; min-width:0; }
+.history-item-details { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.history-item-state { font-size:11px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.history-item-time { font-size:10px; color:var(--text-muted); white-space:nowrap; }
+.history-empty { font-size:13px; color:var(--text-muted); text-align:center; padding:30px; }
+
+/* Profiles */
+.profile-list { display:flex; flex-direction:column; gap:6px; }
+.profile-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); transition:all .2s; }
+.profile-item:hover { border-color:var(--accent); }
+.profile-item-name { flex:1; font-size:13px; font-weight:600; cursor:pointer; }
+.profile-item-name:hover { color:var(--accent); }
+.profile-item-actions { display:flex; gap:4px; }
+.profile-empty { font-size:13px; color:var(--text-muted); text-align:center; padding:30px; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:1000; display:flex; align-items:center; justify-content:center; animation:fadeIn .2s; }
+.modal { background:var(--bg-secondary); border-radius:var(--radius); padding:24px; width:90%; max-width:480px; box-shadow:var(--shadow); animation:scaleIn .2s; }
+.modal h3 { font-size:18px; margin-bottom:16px; }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes scaleIn { from { opacity:0; transform:scale(.9); } to { opacity:1; transform:scale(1); } }
+
+/* Responsive */
+@media (max-width:640px) {
+    .form-row { grid-template-columns:1fr; }
+    .btn-group { flex-direction:column; }
+    .btn { width:100%; justify-content:center; }
+    .header-version { display:none; }
+    .presets { grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="header-version">v2.0</div>
+        <h1>Discord RPC Manager</h1>
+        <p>Ставь любую активность в Discord</p>
+    </header>
+
+    <div class="status-bar" id="statusBar">
+        <div class="status-dot" id="statusDot"></div>
+        <span class="status-text" id="statusText">Не подключено</span>
+        <div class="status-actions">
+            <button class="btn btn-ghost btn-sm" onclick="toggleAutoReconnect()" id="autoReconnectBtn" title="Автоподключение">🔄</button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab active" onclick="switchTab('main')">Главная</div>
+        <div class="tab" onclick="switchTab('profiles')">Профили</div>
+        <div class="tab" onclick="switchTab('history')">История</div>
+        <div class="tab" onclick="switchTab('settings')">Настройки</div>
+    </div>
+
+    <!-- MAIN TAB -->
+    <div id="tab-main">
+        <!-- Connection -->
+        <div class="section">
+            <div class="section-header">
+                <h2><span class="icon">🔌</span> Подключение</h2>
+            </div>
+            <div class="form-group">
+                <label>Client ID (Application ID)</label>
+                <div style="display:flex;gap:8px">
+                    <input type="text" id="clientId" placeholder="Вставьте ID из Discord Developer Portal" style="flex:1">
+                    <button class="btn btn-primary" onclick="connect()" id="connectBtn">Подключить</button>
+                    <button class="btn btn-secondary" onclick="disconnect()">Откл.</button>
+                </div>
+                <div class="hint">
+                    <a href="https://discord.com/developers/applications" target="_blank">Discord Developer Portal</a> → New Application → скопируйте Application ID
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Settings -->
+        <div class="section">
+            <h2><span class="icon">🎯</span> Активность</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Details (строка 1)</label>
+                    <input type="text" id="details" placeholder="Playing a game" maxlength="128">
+                    <div class="char-count" id="detailsCount">0/128</div>
+                </div>
+                <div class="form-group">
+                    <label>State (строка 2)</label>
+                    <input type="text" id="state" placeholder="In a party" maxlength="128">
+                    <div class="char-count" id="stateCount">0/128</div>
+                </div>
+            </div>
+
+            <!-- Large image -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Большая картинка</label>
+                    <div style="display:flex;gap:10px;align-items:flex-start">
+                        <div class="image-preview-box" id="largeImagePreview"><span style="font-size:22px;color:var(--border)">🖼️</span></div>
+                        <div style="flex:1">
+                            <input type="text" id="largeImageKey" placeholder="Ключ или URL">
+                            <div class="upload-zone" id="largeUploadZone" onclick="document.getElementById('largeFileInput').click()">
+                                <input type="file" id="largeFileInput" accept="image/*">
+                                <div class="upload-zone-text">Перетащи или <span>выбери файл</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Текст большой картинки</label>
+                    <input type="text" id="largeImageText" placeholder="Подсказка при наведении" maxlength="128">
+                    <div class="char-count" id="largeImageTextCount">0/128</div>
+                </div>
+            </div>
+
+            <!-- Small image -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Маленькая картинка</label>
+                    <div style="display:flex;gap:10px;align-items:flex-start">
+                        <div class="image-preview-box" id="smallImagePreview"><span style="font-size:22px;color:var(--border)">🖼️</span></div>
+                        <div style="flex:1">
+                            <input type="text" id="smallImageKey" placeholder="Ключ или URL">
+                            <div class="upload-zone" id="smallUploadZone" onclick="document.getElementById('smallFileInput').click()">
+                                <input type="file" id="smallFileInput" accept="image/*">
+                                <div class="upload-zone-text">Перетащи или <span>выбери файл</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Текст маленькой картинки</label>
+                    <input type="text" id="smallImageText" placeholder="Подсказка при наведении" maxlength="128">
+                    <div class="char-count" id="smallImageTextCount">0/128</div>
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div class="form-group">
+                <label>Загруженные картинки</label>
+                <div class="gallery" id="gallery"><div class="gallery-empty">Нет загруженных картинок</div></div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="accordion" id="buttonsAccordion">
+                <div class="accordion-header" onclick="toggleAccordion('buttonsAccordion')">
+                    <span class="accordion-title">Кнопки (макс. 2)</span>
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-body"><div class="accordion-content">
+                    <div class="form-row">
+                        <div class="form-group"><label>Кнопка 1 — Текст</label><input type="text" id="button1Label" placeholder="Visit Website" maxlength="32"></div>
+                        <div class="form-group"><label>Кнопка 1 — Ссылка</label><input type="url" id="button1Url" placeholder="https://example.com"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Кнопка 2 — Текст</label><input type="text" id="button2Label" placeholder="Join Server" maxlength="32"></div>
+                        <div class="form-group"><label>Кнопка 2 — Ссылка</label><input type="url" id="button2Url" placeholder="https://discord.gg/xxx"></div>
+                    </div>
+                </div></div>
+            </div>
+
+            <!-- Timer -->
+            <div class="accordion" id="timeAccordion">
+                <div class="accordion-header" onclick="toggleAccordion('timeAccordion')">
+                    <span class="accordion-title">Таймер</span>
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-body"><div class="accordion-content">
+                    <div class="form-group">
+                        <label>Тип таймера</label>
+                        <select id="timerType">
+                            <option value="none">Без таймера</option>
+                            <option value="elapsed">Прошло времени</option>
+                            <option value="remaining">Осталось времени</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="timerMinutesGroup" style="display:none">
+                        <label>Минуты</label>
+                        <input type="number" id="timerMinutes" placeholder="60" min="1">
+                    </div>
+                </div></div>
+            </div>
+
+            <!-- Presets -->
+            <div class="accordion open" id="presetsAccordion">
+                <div class="accordion-header" onclick="toggleAccordion('presetsAccordion')">
+                    <span class="accordion-title">Готовые пресеты</span>
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-body" style="max-height:3000px"><div class="accordion-content">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="presetSearch" placeholder="Поиск пресетов..." oninput="filterPresets(this.value)">
+                    </div>
+                    <div id="presetsContainer"></div>
+                    <div id="customPresetsContainer"></div>
+                </div></div>
+            </div>
+
+            <!-- Preview -->
+            <div class="preview">
+                <div class="preview-title">Превью Discord</div>
+                <div class="discord-card">
+                    <div class="discord-avatar" id="previewAvatar"><span id="previewAvatarIcon">👤</span><img id="previewAvatarImg" src="" style="display:none"></div>
+                    <div class="discord-info">
+                        <div class="discord-name">Username</div>
+                        <div class="discord-status">В сети</div>
+                        <div id="previewActivity" style="display:none">
+                            <div class="discord-activity">
+                                <div class="discord-activity-img" id="previewActivityImg"><span id="previewActivityImgIcon">🎮</span><img id="previewActivityImgTag" src="" style="display:none"></div>
+                                <div class="discord-activity-text" id="previewText"></div>
+                            </div>
+                            <div class="discord-timer" id="previewTimer" style="display:none"></div>
+                            <div class="discord-buttons" id="previewButtons"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group" style="margin-top:14px">
+                <button class="btn btn-success" onclick="setActivity()" id="setActivityBtn">Установить активность</button>
+                <button class="btn btn-danger" onclick="clearActivity()">Очистить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROFILES TAB -->
+    <div id="tab-profiles" style="display:none">
+        <div class="section">
+            <div class="section-header">
+                <h2><span class="icon">👤</span> Профили</h2>
+                <button class="btn btn-primary btn-sm" onclick="showSaveProfileModal()">+ Создать</button>
+            </div>
+            <div class="profile-list" id="profileList"><div class="profile-empty">Нет сохранённых профилей</div></div>
+        </div>
+    </div>
+
+    <!-- HISTORY TAB -->
+    <div id="tab-history" style="display:none">
+        <div class="section">
+            <div class="section-header">
+                <h2><span class="icon">📜</span> История активностей</h2>
+                <button class="btn btn-ghost btn-sm" onclick="clearHistory()">Очистить</button>
+            </div>
+            <div class="history-list" id="historyList"><div class="history-empty">История пуста</div></div>
+        </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" style="display:none">
+        <div class="section">
+            <h2><span class="icon">⚙️</span> Настройки</h2>
+            <div class="form-group">
+                <label>Автоподключение к Discord</label>
+                <select id="autoConnectSetting" onchange="saveSetting('autoConnect', this.value === 'true')">
+                    <option value="false">Выключено</option>
+                    <option value="true">Включено</option>
+                </select>
+            </div>
+        </div>
+        <div class="section">
+            <h2><span class="icon">📦</span> Экспорт / Импорт</h2>
+            <div class="btn-group">
+                <button class="btn btn-primary btn-sm" onclick="exportSettings()">📥 Экспорт</button>
+                <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importFile').click()">📤 Импорт</button>
+                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importSettings(event)">
+            </div>
+        </div>
+        <div class="section">
+            <h2><span class="icon">❓</span> Как подключить</h2>
+            <div class="instruction-steps">
+                <div class="instruction-step"><div class="step-number"></div><div class="step-text">Перейдите на <a href="https://discord.com/developers/applications" target="_blank">Discord Developer Portal</a></div></div>
+                <div class="instruction-step"><div class="step-number"></div><div class="step-text">Нажмите <strong>«New Application»</strong>, введите имя, нажмите «Create»</div></div>
+                <div class="instruction-step"><div class="step-number"></div><div class="step-text">Скопируйте <strong>Application ID</strong> из «General Information»</div></div>
+                <div class="instruction-step"><div class="step-number"></div><div class="step-text">Вставьте ID в поле <strong>«Client ID»</strong> на главной вкладке</div></div>
+                <div class="instruction-step"><div class="step-number"></div><div class="step-text">Нажмите <strong>«Подключить»</strong> и установите активность</div></div>
+            </div>
+            <div class="accordion" id="imagesAccordion">
+                <div class="accordion-header" onclick="toggleAccordion('imagesAccordion')">
+                    <span class="accordion-title">Как добавить свои картинки</span>
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-body"><div class="accordion-content">
+                    <div class="instruction-steps">
+                        <div class="instruction-step"><div class="step-number"></div><div class="step-text">В Developer Portal → <strong>Rich Presence → Art Assets</strong></div></div>
+                        <div class="instruction-step"><div class="step-number"></div><div class="step-text">Нажмите <strong>«Add Image(s)»</strong>, загрузите картинку и запомните Key</div></div>
+                        <div class="instruction-step"><div class="step-number"></div><div class="step-text">Впишите Key в поле картинки или перетащите файл в зону загрузки</div></div>
+                    </div>
+                </div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// === State ===
+let ws, connected = false, timerInterval = null;
+
+// === Toast System ===
+function toast(msg, type='info') {
+    const el = document.createElement('div');
+    el.className = `toast toast-${type}`;
+    el.textContent = msg;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => el.remove(), 4000);
+}
+
+// === Tabs ===
+function switchTab(name) {
+    document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + name).style.display = 'block';
+    event.target.classList.add('active');
+    if (name === 'profiles') loadProfiles();
+    if (name === 'history') loadHistory();
+}
+
+// === Accordion ===
+function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
+
+// === Char counts ===
+['details','state','largeImageText','smallImageText'].forEach(id => {
+    const inp = document.getElementById(id);
+    const cnt = document.getElementById(id + 'Count');
+    if (!inp || !cnt) return;
+    inp.addEventListener('input', () => {
+        const len = inp.value.length;
+        cnt.textContent = `${len}/128`;
+        cnt.className = 'char-count' + (len > 120 ? (len > 128 ? ' over' : ' warn') : '');
+        updatePreview();
+    });
+});
+
+// === Preview ===
+function esc(s) { const d = document.createElement('div'); d.appendChild(document.createTextNode(s)); return d.innerHTML; }
+
+function updatePreview() {
+    const details = document.getElementById('details').value;
+    const state = document.getElementById('state').value;
+    const largeText = document.getElementById('largeImageText').value;
+    const btn1Label = document.getElementById('button1Label').value;
+    const btn2Label = document.getElementById('button2Label').value;
+    const timerType = document.getElementById('timerType').value;
+
+    const act = document.getElementById('previewActivity');
+    const text = document.getElementById('previewText');
+    const timer = document.getElementById('previewTimer');
+    const btns = document.getElementById('previewButtons');
+
+    if (details || state) {
+        act.style.display = 'block';
+        let html = '';
+        if (details) html += `<strong>${esc(details)}</strong><br>`;
+        if (state) html += esc(state);
+        if (largeText) html += `<br><em>${esc(largeText)}</em>`;
+        text.innerHTML = html;
+
+        timer.style.display = timerType !== 'none' ? 'block' : 'none';
+        if (timerType === 'elapsed') timer.textContent = '00:00 elapsed';
+        else if (timerType === 'remaining') {
+            const mins = parseInt(document.getElementById('timerMinutes').value || 60);
+            timer.textContent = `${mins}:00 remaining`;
+        }
+
+        let btnsHtml = '';
+        if (btn1Label) btnsHtml += `<div class="discord-btn">${esc(btn1Label)}</div>`;
+        if (btn2Label) btnsHtml += `<div class="discord-btn">${esc(btn2Label)}</div>`;
+        btns.innerHTML = btnsHtml;
+    } else {
+        act.style.display = 'none';
+    }
+}
+
+// Timer live update
+document.getElementById('timerType').addEventListener('change', e => {
+    document.getElementById('timerMinutesGroup').style.display = e.target.value === 'none' ? 'none' : 'block';
+    updatePreview();
+});
+document.getElementById('timerMinutes').addEventListener('input', updatePreview);
+
+// === Connect ===
+async function connect() {
+    const clientId = document.getElementById('clientId').value.trim();
+    if (!clientId) return toast('Введите Client ID', 'error');
+    const btn = document.getElementById('connectBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner spinner-dark"></span>';
+    try {
+        const res = await fetch('/api/connect', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({clientId}) });
+        const data = await res.json();
+        if (data.error) return toast(data.error, 'error');
+        toast(data.message, 'success');
+    } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Подключить'; }
+}
+
+async function disconnect() {
+    try { await fetch('/api/disconnect', { method:'POST' }); toast('Отключено', 'info'); } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+// === Set Activity ===
+async function setActivity() {
+    const btn = document.getElementById('setActivityBtn');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner spinner-dark"></span> Установка...';
+    try {
+        const res = await fetch('/api/activity', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({
+                details: document.getElementById('details').value,
+                state: document.getElementById('state').value,
+                largeImageKey: document.getElementById('largeImageKey').value,
+                largeImageText: document.getElementById('largeImageText').value,
+                smallImageKey: document.getElementById('smallImageKey').value,
+                smallImageText: document.getElementById('smallImageText').value,
+                buttons: [
+                    { label: document.getElementById('button1Label').value, url: document.getElementById('button1Url').value },
+                    { label: document.getElementById('button2Label').value, url: document.getElementById('button2Url').value }
+                ].filter(b => b.label && b.url),
+                startTimestamp: document.getElementById('timerType').value === 'elapsed',
+                endTimestamp: document.getElementById('timerType').value === 'remaining' ? parseInt(document.getElementById('timerMinutes').value || 60) * 60 : null
+            })
+        });
+        const data = await res.json();
+        if (data.error) return toast(data.error, 'error');
+        toast(data.message, 'success');
+        startTimer();
+    } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = 'Установить активность'; }
+}
+
+async function clearActivity() {
+    try {
+        const res = await fetch('/api/clear', { method:'POST' });
+        const data = await res.json();
+        if (data.error) return toast(data.error, 'error');
+        toast(data.message, 'success');
+        stopTimer();
+    } catch (e) { toast('Ошибка: ' + e.message, 'error'); }
+}
+
+// === Timer display ===
+function startTimer() {
+    stopTimer();
+    if (document.getElementById('timerType').value !== 'elapsed') return;
+    const timer = document.getElementById('previewTimer');
+    let sec = 0;
+    timerInterval = setInterval(() => {
+        sec++;
+        const m = Math.floor(sec/60), s = sec%60;
+        timer.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')} elapsed`;
+    }, 1000);
+}
+function stopTimer() { if (timerInterval) { clearInterval(timerInterval); timerInterval = null; } }
+
+// === Presets ===
+const presetCategories = {
+    '💻 Редакторы кода': {
+        vscode: { d:'Visual Studio Code', s:'Editing main.js', lk:'vscode', lt:'Visual Studio Code', sk:'nodejs', st:'Node.js' },
+        sublime: { d:'Sublime Text', s:'Editing config.json', lk:'sublime', lt:'Sublime Text' },
+        intellij: { d:'IntelliJ IDEA', s:'Building project', lk:'intellij', lt:'IntelliJ IDEA' },
+        webstorm: { d:'WebStorm', s:'Refactoring code', lk:'webstorm', lt:'WebStorm' },
+        vim: { d:'Vim', s:'Editing .vimrc', lk:'vim', lt:'Vim' },
+        neovim: { d:'Neovim', s:'Writing Lua config', lk:'neovim', lt:'Neovim' },
+        notepad: { d:'Notepad++', s:'Editing notes.txt', lk:'notepad', lt:'Notepad++' },
+        emacs: { d:'Emacs', s:'Writing Lisp', lk:'emacs', lt:'GNU Emacs' },
+    },
+    '🎮 Игры': {
+        minecraft: { d:'Playing Minecraft', s:'Survival World', lk:'minecraft', lt:'Minecraft' },
+        valorant: { d:'Playing VALORANT', s:'Competitive — Ascent', lk:'valorant', lt:'VALORANT' },
+        csgo: { d:'Playing CS2', s:'Dust II — Competitive', lk:'cs2', lt:'Counter-Strike 2' },
+        fortnite: { d:'Playing Fortnite', s:'Squads — Battle Royale', lk:'fortnite', lt:'Fortnite' },
+        roblox: { d:'Playing Roblox', s:'Adopt Me!', lk:'roblox', lt:'Roblox' },
+        gta: { d:'Playing GTA V', s:'Online — Los Santos', lk:'gta', lt:'GTA V' },
+        apex: { d:'Playing Apex Legends', s:'Ranked — World\'s Edge', lk:'apex', lt:'Apex Legends' },
+        lol: { d:'Playing League of Legends', s:'Summoner\'s Rift — Ranked', lk:'lol', lt:'League of Legends' },
+        dota: { d:'Playing Dota 2', s:'All Pick — Mid Lane', lk:'dota', lt:'Dota 2' },
+        rocket: { d:'Playing Rocket League', s:'Doubles — Champion', lk:'rocket', lt:'Rocket League' },
+        among: { d:'Playing Among Us', s:'In a lobby', lk:'among', lt:'Among Us' },
+        genshin: { d:'Playing Genshin Impact', s:'Exploring Teyvat', lk:'genshin', lt:'Genshin Impact' },
+        pubg: { d:'Playing PUBG', s:'Erangel — Squad', lk:'pubg', lt:'PUBG' },
+        overwatch: { d:'Playing Overwatch 2', s:'Competitive — Push', lk:'overwatch', lt:'Overwatch 2' },
+        zelda: { d:'Playing Zelda: TOTK', s:'Exploring Hyrule', lk:'zelda', lt:'Zelda: TOTK' },
+        hollow: { d:'Playing Hollow Knight', s:'City of Tears', lk:'hollow', lt:'Hollow Knight' },
+        stardew: { d:'Playing Stardew Valley', s:'Spring — Year 2', lk:'stardew', lt:'Stardew Valley' },
+        terraria: { d:'Playing Terraria', s:'Hardmode — Building', lk:'terraria', lt:'Terraria' },
+    },
+    '🎵 Музыка': {
+        spotify: { d:'Listening to Spotify', s:'Artist — Song Name', lk:'spotify', lt:'Spotify' },
+        apple: { d:'Listening to Apple Music', s:'Album — Track', lk:'apple', lt:'Apple Music' },
+        youtube_music: { d:'Listening to YouTube Music', s:'Playlist: Favorites', lk:'youtube', lt:'YouTube Music' },
+        soundcloud: { d:'Listening to SoundCloud', s:'Discover Weekly', lk:'soundcloud', lt:'SoundCloud' },
+        tidal: { d:'Listening to TIDAL', s:'HiFi — Lossless', lk:'tidal', lt:'TIDAL' },
+    },
+    '📺 Стриминг': {
+        twitch: { d:'Streaming on Twitch', s:'Live now!', lk:'twitch', lt:'Twitch', sk:'live', st:'LIVE' },
+        youtube_stream: { d:'Streaming on YouTube', s:'Live — Playing Games', lk:'youtube', lt:'YouTube' },
+        netflix: { d:'Watching Netflix', s:'Season 2, Episode 5', lk:'netflix', lt:'Netflix' },
+        disney: { d:'Watching Disney+', s:'The Mandalorian', lk:'disney', lt:'Disney+' },
+        hbo: { d:'Watching HBO Max', s:'House of the Dragon', lk:'hbo', lt:'HBO Max' },
+        prime: { d:'Watching Prime Video', s:'The Boys — S4', lk:'prime', lt:'Prime Video' },
+        crunchyroll: { d:'Watching Crunchyroll', s:'Jujutsu Kaisen — Ep 24', lk:'crunchyroll', lt:'Crunchyroll' },
+    },
+    '🌐 Браузеры': {
+        chrome: { d:'Using Chrome', s:'Browsing the web', lk:'chrome', lt:'Google Chrome' },
+        firefox: { d:'Using Firefox', s:'Browsing the web', lk:'firefox', lt:'Mozilla Firefox' },
+        opera: { d:'Using Opera GX', s:'Gaming browser', lk:'opera', lt:'Opera GX' },
+        edge: { d:'Using Edge', s:'Browsing the web', lk:'edge', lt:'Microsoft Edge' },
+    },
+    '💬 Соцсети': {
+        discord: { d:'On Discord', s:'Hanging out', lk:'discord', lt:'Discord' },
+        telegram: { d:'Using Telegram', s:'Chatting', lk:'telegram', lt:'Telegram' },
+        twitter: { d:'On X (Twitter)', s:'Scrolling the feed', lk:'twitter', lt:'X' },
+        reddit: { d:'On Reddit', s:'Browsing r/all', lk:'reddit', lt:'Reddit' },
+        tiktok: { d:'On TikTok', s:'Watching videos', lk:'tiktok', lt:'TikTok' },
+        vk: { d:'ВКонтакте', s:'Читаю ленту', lk:'vk', lt:'ВКонтакте' },
+    },
+    '🛠 Программирование': {
+        git: { d:'Using Git', s:'Committing changes', lk:'git', lt:'Git' },
+        docker: { d:'Using Docker', s:'Building containers', lk:'docker', lt:'Docker' },
+        python: { d:'Writing Python', s:'Running script.py', lk:'python', lt:'Python' },
+        js: { d:'Writing JavaScript', s:'async/await magic', lk:'js', lt:'JavaScript' },
+        react: { d:'Building with React', s:'useEffect everywhere', lk:'react', lt:'React' },
+        node: { d:'Using Node.js', s:'npm install...', lk:'nodejs', lt:'Node.js' },
+        terminal: { d:'In the Terminal', s:'Running scripts', lk:'terminal', lt:'Terminal' },
+    },
+    '🎨 Дизайн': {
+        figma: { d:'Using Figma', s:'Designing UI', lk:'figma', lt:'Figma' },
+        photoshop: { d:'Using Photoshop', s:'Editing photos', lk:'photoshop', lt:'Photoshop' },
+        blender: { d:'Using Blender', s:'3D Modeling', lk:'blender', lt:'Blender' },
+        premiere: { d:'Using Premiere Pro', s:'Editing video', lk:'premiere', lt:'Premiere Pro' },
+    },
+    '📚 Учёба': {
+        studying: { d:'Studying', s:'Mathematics — Chapter 5', lk:'book', lt:'Learning' },
+        reading: { d:'Reading a book', s:'Atomic Habits', lk:'read', lt:'Reading' },
+        notion: { d:'Using Notion', s:'Organizing notes', lk:'notion', lt:'Notion' },
+        obsidian: { d:'Using Obsidian', s:'Linking thoughts', lk:'obsidian', lt:'Obsidian' },
+    },
+    '🏋️ Спорт': {
+        gym: { d:'At the gym', s:'Leg day', lk:'gym', lt:'Working Out' },
+        running: { d:'Running', s:'5K in 25 min', lk:'run', lt:'Running' },
+        yoga: { d:'Doing yoga', s:'Morning flow', lk:'yoga', lt:'Yoga' },
+    },
+    '🌍 Путешествия': {
+        travel: { d:'Traveling', s:'Exploring new places', lk:'travel', lt:'Traveling' },
+        japan: { d:'In Japan', s:'Tokyo — Shibuya', lk:'japan', lt:'Japan' },
+        space: { d:'In Space', s:'Floating in zero-G', lk:'space', lt:'Space' },
+    },
+    '⚡ Разное': {
+        afk: { d:'AFK', s:'Away from keyboard', lk:'afk', lt:'AFK' },
+        idle: { d:'Idling', s:'Just vibing', lk:'idle', lt:'Idle' },
+        sleeping: { d:'Sleeping', s:'Zzz...', lk:'sleep', lt:'Sleeping' },
+        cooking: { d:'Cooking', s:'Making pasta', lk:'cook', lt:'Cooking' },
+        coffee: { d:'Making coffee', s:'Pour over method', lk:'coffee', lt:'Coffee' },
+        driving: { d:'Driving', s:'On the highway', lk:'drive', lt:'Driving' },
+    },
+};
+
+const presetKeys = {};
+
+function renderPresets() {
+    const container = document.getElementById('presetsContainer');
+    let html = '';
+    for (const [cat, items] of Object.entries(presetCategories)) {
+        html += `<div class="preset-category"><div class="preset-category-title">${cat}</div><div class="presets">`;
+        for (const [key, val] of Object.entries(items)) {
+            presetKeys[key] = val;
+            html += `<div class="preset" data-search="${(val.d+' '+val.s).toLowerCase()}" onclick="applyPreset('${key}')"><div class="preset-name">${esc(val.d)}</div><div class="preset-desc">${esc(val.s)}</div></div>`;
+        }
+        html += '</div></div>';
+    }
+    container.innerHTML = html;
+}
+
+function filterPresets(q) {
+    q = q.toLowerCase();
+    document.querySelectorAll('#presetsContainer .preset').forEach(el => {
+        el.style.display = !q || el.dataset.search.includes(q) ? '' : 'none';
+    });
+}
+
+function applyPreset(name) {
+    const p = presetKeys[name];
+    if (!p) return;
+    document.getElementById('details').value = p.d || '';
+    document.getElementById('state').value = p.s || '';
+    document.getElementById('largeImageKey').value = p.lk || '';
+    document.getElementById('largeImageText').value = p.lt || '';
+    document.getElementById('smallImageKey').value = p.sk || '';
+    document.getElementById('smallImageText').value = p.st || '';
+    ['details','state','largeImageText','smallImageText'].forEach(id => {
+        const inp = document.getElementById(id);
+        const cnt = document.getElementById(id + 'Count');
+        if (cnt) { cnt.textContent = `${inp.value.length}/128`; cnt.className = 'char-count'; }
+    });
+    updatePreview();
+    toast(`Пресет "${p.d}" применён`, 'success');
+}
+
+// === Image Upload ===
+async function uploadImage(file, target) {
+    const formData = new FormData();
+    formData.append('image', file);
+    try {
+        const res = await fetch('/api/upload', { method:'POST', body: formData });
+        const data = await res.json();
+        if (data.error) return toast(data.error, 'error');
+        document.getElementById(target).value = data.url;
+        updateImagePreview(target, data.url);
+        loadGallery();
+        toast('Картинка загружена!', 'success');
+    } catch (e) { toast('Ошибка загрузки: ' + e.message, 'error'); }
+}
+
+function updateImagePreview(target, url) {
+    const previewId = target === 'largeImageKey' ? 'largeImagePreview' : 'smallImagePreview';
+    document.getElementById(previewId).innerHTML = `<img src="${url}">`;
+    if (target === 'largeImageKey') {
+        document.getElementById('previewActivityImgTag').src = url;
+        document.getElementById('previewActivityImgTag').style.display = 'block';
+        document.getElementById('previewActivityImgIcon').style.display = 'none';
+    }
+}
+
+document.getElementById('largeFileInput').addEventListener('change', e => { if (e.target.files[0]) uploadImage(e.target.files[0], 'largeImageKey'); });
+document.getElementById('smallFileInput').addEventListener('change', e => { if (e.target.files[0]) uploadImage(e.target.files[0], 'smallImageKey'); });
+
+['largeUploadZone','smallUploadZone'].forEach(id => {
+    const zone = document.getElementById(id);
+    const target = id === 'largeUploadZone' ? 'largeImageKey' : 'smallImageKey';
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragover'); if (e.dataTransfer.files[0]) uploadImage(e.dataTransfer.files[0], target); });
+});
+
+['largeImageKey','smallImageKey'].forEach(id => {
+    document.getElementById(id).addEventListener('input', e => {
+        const v = e.target.value;
+        const previewId = id === 'largeImageKey' ? 'largeImagePreview' : 'smallImagePreview';
+        if (v && (v.startsWith('/') || v.startsWith('http'))) {
+            updateImagePreview(id, v);
+        } else {
+            document.getElementById(previewId).innerHTML = '<span style="font-size:22px;color:var(--border)">🖼️</span>';
+            if (id === 'largeImageKey') {
+                document.getElementById('previewActivityImgTag').style.display = 'none';
+                document.getElementById('previewActivityImgIcon').style.display = '';
+            }
+        }
+    });
+});
+
+// === Gallery ===
+async function loadGallery() {
+    try {
+        const res = await fetch('/api/uploads');
+        const files = await res.json();
+        const g = document.getElementById('gallery');
+        if (!files.length) { g.innerHTML = '<div class="gallery-empty">Нет загруженных картинок</div>'; return; }
+        g.innerHTML = files.map(f => `<div class="gallery-item" onclick="selectFromGallery('${f.url}')" title="${esc(f.name)}"><img src="${f.url}"><button class="delete-btn" onclick="event.stopPropagation();deleteImage('${f.name}')">✕</button></div>`).join('');
+    } catch {}
+}
+
+function selectFromGallery(url) {
+    const lk = document.getElementById('largeImageKey'), sk = document.getElementById('smallImageKey');
+    if (!lk.value) { lk.value = url; updateImagePreview('largeImageKey', url); }
+    else { sk.value = url; updateImagePreview('smallImageKey', url); }
+}
+
+async function deleteImage(name) {
+    try { await fetch(`/api/upload/${name}`, { method:'DELETE' }); loadGallery(); } catch {}
+}
+
+// === WebSocket ===
+function connectWS() {
+    const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(`${proto}//${location.host}`);
+    ws.onmessage = e => {
+        try {
+            const msg = JSON.parse(e.data);
+            if (msg.type === 'connected' || (msg.type === 'status' && msg.connected)) {
+                document.getElementById('statusDot').classList.add('connected');
+                document.getElementById('statusBar').classList.add('connected');
+                document.getElementById('statusText').textContent = 'Подключено к Discord';
+                connected = true;
+                if (msg.activity) fillFromActivity(msg.activity);
+            } else if (msg.type === 'disconnected' || (msg.type === 'status' && !msg.connected)) {
+                document.getElementById('statusDot').classList.remove('connected');
+                document.getElementById('statusBar').classList.remove('connected');
+                document.getElementById('statusText').textContent = 'Не подключено';
+                connected = false;
+            } else if (msg.type === 'activity_updated') {
+                toast('Активность обновлена', 'success');
+            } else if (msg.type === 'activity_cleared') {
+                toast('Активность очищена', 'info');
+            } else if (msg.type === 'history_updated') {
+                renderHistory(msg.history);
+            }
+        } catch {}
+    };
+    ws.onclose = () => setTimeout(connectWS, 3000);
+    ws.onerror = () => ws.close();
+}
+
+function fillFromActivity(a) {
+    document.getElementById('details').value = a.details || '';
+    document.getElementById('state').value = a.state || '';
+    document.getElementById('largeImageKey').value = a.largeImageKey || '';
+    document.getElementById('largeImageText').value = a.largeImageText || '';
+    document.getElementById('smallImageKey').value = a.smallImageKey || '';
+    document.getElementById('smallImageText').value = a.smallImageText || '';
+    if (a.buttons) {
+        const b = a.buttons;
+        if (b[0]) { document.getElementById('button1Label').value = b[0].label || ''; document.getElementById('button1Url').value = b[0].url || ''; }
+        if (b[1]) { document.getElementById('button2Label').value = b[1].label || ''; document.getElementById('button2Url').value = b[1].url || ''; }
+    }
+    updatePreview();
+}
+
+// === Profiles ===
+async function loadProfiles() {
+    try {
+        const res = await fetch('/api/profiles');
+        const profiles = await res.json();
+        const list = document.getElementById('profileList');
+        const keys = Object.keys(profiles);
+        if (!keys.length) { list.innerHTML = '<div class="profile-empty">Нет сохранённых профилей</div>'; return; }
+        list.innerHTML = keys.map(name => `
+            <div class="profile-item">
+                <span class="profile-item-name" onclick="loadProfile('${esc(name)}')">${esc(name)}</span>
+                <div class="profile-item-actions">
+                    <button class="btn btn-ghost btn-sm" onclick="loadProfile('${esc(name)}')">📋</button>
+                    <button class="btn btn-ghost btn-sm" onclick="deleteProfile('${esc(name)}')" style="color:var(--red)">✕</button>
+                </div>
+            </div>
+        `).join('');
+    } catch {}
+}
+
+function showSaveProfileModal() {
+    const name = prompt('Имя профиля:');
+    if (!name) return;
+    const data = getActivityData();
+    fetch(`/api/profiles/${encodeURIComponent(name)}`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+        .then(r => r.json()).then(() => { toast(`Профиль "${name}" сохранён`, 'success'); loadProfiles(); });
+}
+
+async function loadProfile(name) {
+    try {
+        const res = await fetch('/api/profiles');
+        const profiles = await res.json();
+        const p = profiles[name];
+        if (!p) return;
+        document.getElementById('details').value = p.details || '';
+        document.getElementById('state').value = p.state || '';
+        document.getElementById('largeImageKey').value = p.largeImageKey || '';
+        document.getElementById('largeImageText').value = p.largeImageText || '';
+        document.getElementById('smallImageKey').value = p.smallImageKey || '';
+        document.getElementById('smallImageText').value = p.smallImageText || '';
+        if (p.buttons) {
+            if (p.buttons[0]) { document.getElementById('button1Label').value = p.buttons[0].label || ''; document.getElementById('button1Url').value = p.buttons[0].url || ''; }
+            if (p.buttons[1]) { document.getElementById('button2Label').value = p.buttons[1].label || ''; document.getElementById('button2Url').value = p.buttons[1].url || ''; }
+        }
+        ['details','state','largeImageText','smallImageText'].forEach(id => {
+            const inp = document.getElementById(id), cnt = document.getElementById(id + 'Count');
+            if (cnt) { cnt.textContent = `${inp.value.length}/128`; cnt.className = 'char-count'; }
+        });
+        updatePreview();
+        toast(`Профиль "${name}" загружен`, 'success');
+        switchTab('main');
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.querySelectorAll('.tab')[1].classList.remove('active');
+    } catch {}
+}
+
+async function deleteProfile(name) {
+    if (!confirm(`Удалить профиль "${name}"?`)) return;
+    await fetch(`/api/profiles/${encodeURIComponent(name)}`, { method:'DELETE' });
+    toast(`Профиль "${name}" удалён`, 'info');
+    loadProfiles();
+}
+
+function getActivityData() {
+    return {
+        details: document.getElementById('details').value,
+        state: document.getElementById('state').value,
+        largeImageKey: document.getElementById('largeImageKey').value,
+        largeImageText: document.getElementById('largeImageText').value,
+        smallImageKey: document.getElementById('smallImageKey').value,
+        smallImageText: document.getElementById('smallImageText').value,
+        buttons: [
+            { label: document.getElementById('button1Label').value, url: document.getElementById('button1Url').value },
+            { label: document.getElementById('button2Label').value, url: document.getElementById('button2Url').value }
+        ].filter(b => b.label && b.url)
+    };
+}
+
+// === History ===
+async function loadHistory() {
+    try { const res = await fetch('/api/history'); renderHistory(await res.json()); } catch {}
+}
+
+function renderHistory(items) {
+    const list = document.getElementById('historyList');
+    if (!items || !items.length) { list.innerHTML = '<div class="history-empty">История пуста</div>'; return; }
+    list.innerHTML = items.map((h, i) => {
+        const t = new Date(h.timestamp);
+        const time = t.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit'});
+        return `<div class="history-item" onclick="applyHistory(${i})">
+            <div class="history-item-info"><div class="history-item-details">${esc(h.details || h.state || '(пусто)')}</div><div class="history-item-state">${esc(h.state || '')}</div></div>
+            <div class="history-item-time">${time}</div>
+        </div>`;
+    }).join('');
+}
+
+async function applyHistory(i) {
+    try {
+        const res = await fetch('/api/history');
+        const history = await res.json();
+        const h = history[i];
+        if (!h) return;
+        fillFromActivity(h);
+        toast('Активность из истории загружена', 'success');
+    } catch {}
+}
+
+async function clearHistory() {
+    if (!confirm('Очистить всю историю?')) return;
+    await fetch('/api/history', { method:'DELETE' });
+    toast('История очищена', 'info');
+    loadHistory();
+}
+
+// === Auto-reconnect ===
+async function toggleAutoReconnect() {
+    try {
+        const res = await fetch('/api/settings');
+        const s = await res.json();
+        const newVal = !s.autoConnect;
+        await fetch('/api/settings', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({autoConnect: newVal}) });
+        toast(newVal ? 'Автоподключение включено' : 'Автоподключение выключено', 'info');
+    } catch {}
+}
+
+// === Settings ===
+async function loadSettings() {
+    try {
+        const res = await fetch('/api/settings');
+        const s = await res.json();
+        document.getElementById('autoConnectSetting').value = String(s.autoConnect || false);
+        if (s.lastClientId) document.getElementById('clientId').value = s.lastClientId;
+    } catch {}
+}
+
+async function saveSetting(key, val) {
+    await fetch('/api/settings', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({[key]: val}) });
+    toast('Настройка сохранена', 'success');
+}
+
+// === Export/Import ===
+function exportSettings() {
+    fetch('/api/export').then(r => r.json()).then(data => {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `rpc-manager-backup-${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        toast('Настройки экспортированы', 'success');
+    });
+}
+
+function importSettings(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async ev => {
+        try {
+            const data = JSON.parse(ev.target.result);
+            await fetch('/api/import', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+            toast('Настройки импортированы! Обновите страницу.', 'success');
+            setTimeout(() => location.reload(), 1500);
+        } catch { toast('Неверный формат файла', 'error'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+}
+
+// === Client ID persistence ===
+document.getElementById('clientId').addEventListener('change', e => {
+    fetch('/api/settings', { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({lastClientId: e.target.value}) });
+});
+
+// === Init ===
+connectWS();
+renderPresets();
+loadGallery();
+loadSettings();
+</script>
+</body>
+</html>

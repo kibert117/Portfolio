@@ -1,0 +1,26 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+.venv/
+
+# Discord RPC data (runtime state)
+discord-rpc/data/*.json
+discord-rpc/public/uploads/*
+
+# Telegram bot template
+tg_bot_template/.env
+tg_bot_template/bot.db
+__pycache__/
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

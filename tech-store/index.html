@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechZone - Магазин техники</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar" id="header">
+    <div class="nav-container">
+        <a href="#" class="logo">Tech<span>Zone</span></a>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Поиск товаров...">
+            <button id="searchBtn">🔍</button>
+        </div>
+        <button class="burger" id="burger" aria-label="Меню">☰</button>
+        <div class="nav-links" id="navLinks">
+            <a href="#catalog">Каталог</a>
+            <a href="#" id="cartBtn">🛒 <span id="cartCount">0</span></a>
+            <a href="#" id="profileBtn">👤</a>
+        </div>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-particles" id="heroParticles"></div>
+    <div class="hero-content">
+        <h1>Лучшая техника<br>по лучшим ценам</h1>
+        <p>Смартфоны, ноутбуки, наушники и аксессуары</p>
+        <a href="#catalog" class="hero-btn">Смотреть каталог</a>
+        <button class="hero-btn cta-btn" id="ctaBtn">Оставить заявку</button>
+    </div>
+    <div class="hero-bg"></div>
+</header>
+
+<section class="categories">
+    <div class="container">
+        <h2>Категории</h2>
+        <div class="category-grid">
+            <div class="category-card" data-category="phones">
+                <div class="category-icon">📱</div>
+                <h3>Смартфоны</h3>
+            </div>
+            <div class="category-card" data-category="laptops">
+                <div class="category-icon">💻</div>
+                <h3>Ноутбуки</h3>
+            </div>
+            <div class="category-card" data-category="headphones">
+                <div class="category-icon">🎧</div>
+                <h3>Наушники</h3>
+            </div>
+            <div class="category-card" data-category="accessories">
+                <div class="category-icon">⌚</div>
+                <h3>Аксессуары</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="catalog" class="catalog">
+    <div class="container">
+        <h2>Каталог товаров</h2>
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="phones">Смартфоны</button>
+            <button class="filter-btn" data-filter="laptops">Ноутбуки</button>
+            <button class="filter-btn" data-filter="headphones">Наушники</button>
+            <button class="filter-btn" data-filter="accessories">Аксессуары</button>
+        </div>
+        <div class="sort-bar">
+            <select id="sortSelect">
+                <option value="default">Сортировка</option>
+                <option value="price-asc">Цена: по возрастанию</option>
+                <option value="price-desc">Цена: по убыванию</option>
+                <option value="name">По названию</option>
+                <option value="rating">По рейтингу</option>
+            </select>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+    </div>
+</section>
+
+<section class="reviews-section">
+    <div class="container">
+        <h2>Отзывы покупателей</h2>
+        <div id="reviewsList" class="reviews-list"></div>
+        <div class="review-form">
+            <h3>Оставить отзыв</h3>
+            <input type="text" id="reviewName" placeholder="Ваше имя">
+            <select id="reviewRating">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
+            <textarea id="reviewText" placeholder="Ваш отзыв..."></textarea>
+            <button id="submitReview">Отправить отзыв</button>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Tech<span>Zone</span></h3>
+                <p>Лучшая техника по лучшим ценам</p>
+            </div>
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <p>📞 +7 (999) 123-45-67</p>
+                <p>📧 info@techzone.ru</p>
+            </div>
+            <div class="footer-col">
+                <h4>Адрес</h4>
+                <p>📍 г. Москва, ул. Техническая, 42</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 TechZone. Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+<div id="cartModal" class="modal">
+    <div class="modal-content cart-modal">
+        <span class="close">&times;</span>
+        <h2>🛒 Корзина</h2>
+        <div id="cartItems" class="cart-items"></div>
+        <div class="cart-total">
+            <h3>Итого: <span id="cartTotal">0</span> ₽</h3>
+        </div>
+        <button id="checkoutBtn" class="checkout-btn">Оформить заказ</button>
+    </div>
+</div>
+
+<div id="profileModal" class="modal">
+    <div class="modal-content profile-modal">
+        <span class="close">&times;</span>
+        <h2>👤 Личный кабинет</h2>
+        <div id="profileContent">
+            <div id="loginForm">
+                <input type="text" id="loginName" placeholder="Имя">
+                <input type="email" id="loginEmail" placeholder="Email">
+                <button id="loginBtn">Войти</button>
+            </div>
+            <div id="profileInfo" style="display:none;">
+                <div class="profile-avatar" id="profileAvatar">👤</div>
+                <h3 id="profileName"></h3>
+                <p id="profileEmail"></p>
+                <div class="profile-stats">
+                    <div class="stat">
+                        <span id="orderCount">0</span>
+                        <p>Заказов</p>
+                    </div>
+                    <div class="stat">
+                        <span id="totalSpent">0</span>
+                        <p>Потрачено ₽</p>
+                    </div>
+                </div>
+                <h4>История заказов</h4>
+                <div id="orderHistory" class="order-history"></div>
+                <button id="logoutBtn" class="logout-btn">Выйти</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="productModal" class="modal">
+    <div class="modal-content product-modal">
+        <span class="close">&times;</span>
+        <div id="productDetail"></div>
+    </div>
+</div>
+
+<div id="ctaModal" class="modal">
+    <div class="modal-content cta-modal">
+        <span class="close">&times;</span>
+        <h2>📩 Оставить заявку</h2>
+        <form id="ctaForm">
+            <input type="text" id="ctaName" placeholder="Ваше имя" required>
+            <input type="tel" id="ctaPhone" placeholder="Телефон" required>
+            <textarea id="ctaMessage" placeholder="Комментарий (необязательно)"></textarea>
+            <button type="submit" class="cta-submit">Отправить</button>
+        </form>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
