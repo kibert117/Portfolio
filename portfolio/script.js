@@ -1,34 +1,30 @@
-document.getElementById('year').textContent = new Date().getFullYear();
+const year = document.getElementById('year');
+if (year) year.textContent = new Date().getFullYear();
 
-const observer = new IntersectionObserver((entries) => {
+const revealObserver = new IntersectionObserver((entries, observer) => {
   entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('visible');
+    observer.unobserve(entry.target);
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.1 });
 
-document.querySelectorAll('.reveal').forEach((element) => observer.observe(element));
+document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
-// Keep navigation links accessible when JavaScript is unavailable; this only adds a subtle active state.
+document.querySelectorAll('a[href^="#"]').forEach((link) => {
+  link.addEventListener('click', () => document.body.classList.remove('menu-open'));
+});
+
+const navLinks = [...document.querySelectorAll('.topbar nav a')];
 const sections = [...document.querySelectorAll('main section[id]')];
-const links = [...document.querySelectorAll('.nav a')];
 const activeObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (!entry.isIntersecting) return;
-    links.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+    navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
   });
 }, { rootMargin: '-35% 0px -55% 0px' });
 sections.forEach((section) => activeObserver.observe(section));
 
-document.querySelectorAll('a[href^="#"]').forEach((link) => {
-  link.addEventListener('click', () => {
-    document.body.classList.remove('menu-open');
-  });
-});
-
-const style = document.createElement('style');
-style.textContent = '.nav a.active{color:var(--orange)}';
-document.head.appendChild(style);
-
+const activeStyle = document.createElement('style');
+activeStyle.textContent = '.topbar nav a.active{color:var(--red)}';
+document.head.appendChild(activeStyle);
