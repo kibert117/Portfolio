@@ -1,6 +1,10 @@
-# 👨‍💻 Dev Portfolio
+# 👨‍💻 kibert.dev — портфолио разработчика
 
-Привет! Я начинающий разработчик (Python / JavaScript). Это моё портфолио и сборник реальных проектов.
+Практикуюсь в Python и JavaScript и собираю проекты, которые можно запустить, открыть и потрогать. Здесь — боты, веб-приложения, игры и сам сайт-портфолио.
+
+**Сайт:** [kibert117.github.io/Portfolio](https://kibert117.github.io/Portfolio/portfolio/)
+
+**GitHub:** [github.com/kibert117](https://github.com/kibert117)
 
 ## 🛠 Навыки
 - **Python:** discord.py, pygame, aiogram (Telegram-боты)
@@ -18,14 +22,14 @@
 | [tg_bot_template](./tg_bot_template) | Python / aiogram | Шаблон Telegram-бота (заявки + админка) |
 | [portfolio](./portfolio) | HTML / CSS / JS | Этот сайт-портфолио |
 
-## 💼 Услуги (фриланс)
+## 💼 Что могу сделать
 - Telegram-боты на aiogram (заявки, админки, API-интеграции, Mini Apps)
 - Лендинги на чистом HTML/CSS/JS
 - Доработка и фикс багов на Python/JS
 
-Работаю через Safe Deal / гарант-бот. Пишите в Telegram: [@your_telegram](https://t.me/your_telegram)
+По вопросам сотрудничества напишите через GitHub-профиль: [kibert117](https://github.com/kibert117). Перед началом фиксирую объём задачи, результат и сроки.
 
-## 🚀 Как запустить каждый проект
+## 🚀 Как запустить проекты
 Смотри `README.md` внутри каждой папки. Кратко:
 ```bash
 # Бот Discord
