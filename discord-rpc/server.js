@@ -183,7 +183,7 @@ async function connectDiscord(clientId) {
                 connected = true; clearTimeout(timeout);
                 rpcSocket = sock; setupRpcHandlers();
                 rpcHandshake(clientId).then(() => { if (!done) { done = true; mainResolve(); } })
-                    .catch(err => { console.log(`[RPC] Handshake failed (${p}): ${err.message}`); rpcSocket.destroy(); rpcSocket = null; rpcConnected = false; rpcReady = false; tryNext(); });
+                    .catch(err => { console.log(`[RPC] Handshake failed (${p}): ${err.message}`); if (rpcSocket) rpcSocket.destroy(); rpcSocket = null; rpcConnected = false; rpcReady = false; tryNext(); });
             });
             sock.on('error', (err) => { if (!connected) { clearTimeout(timeout); console.log(`[RPC] Error (${p}): ${err.message}`); tryNext(); } });
         }
@@ -265,11 +265,14 @@ app.get('/api/status', (req, res) => {
 // Profiles
 app.get('/api/profiles', (req, res) => res.json(profiles));
 app.put('/api/profiles/:name', (req, res) => {
+    if (!/^[\w-]{1,64}$/.test(req.params.name)) return res.status(400).json({ error: 'Недопустимое имя профиля' });
+    if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)) return res.status(400).json({ error: 'Профиль должен быть JSON-объектом' });
     profiles[req.params.name] = req.body;
     saveJson(PROFILES_FILE, profiles);
     res.json({ success: true });
 });
 app.delete('/api/profiles/:name', (req, res) => {
+    if (!/^[\w-]{1,64}$/.test(req.params.name)) return res.status(400).json({ error: 'Недопустимое имя профиля' });
     delete profiles[req.params.name];
     saveJson(PROFILES_FILE, profiles);
     res.json({ success: true });
@@ -337,7 +340,7 @@ app.use((err, req, res, next) => {
     next();
 });
 app.delete('/api/upload/:filename', (req, res) => {
-    const fp = path.join(UPLOADS_DIR, req.params.filename);
+    const fp = path.join(UPLOADS_DIR, path.basename(req.params.filename));
     if (fs.existsSync(fp)) { fs.unlinkSync(fp); res.json({ success: true }); }
     else res.status(404).json({ error: 'Файл не найден' });
 });
@@ -350,7 +353,7 @@ wss.on('connection', (ws) => {
     ws.send(JSON.stringify({ type: 'status', connected: rpcConnected, activity: currentActivity, history }));
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, '127.0.0.1', () => {
     console.log(`\n[Server] Discord RPC Manager запущен!`);
     console.log(`[Server] http://localhost:${PORT}\n`);
 });

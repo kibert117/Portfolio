@@ -32,6 +32,3 @@ const style = document.createElement('style');
 style.textContent = '.nav a.active{color:var(--orange)}';
 document.head.appendChild(style);
 
-console.info('Portfolio loaded successfully');
-console.assert(document.querySelectorAll('.project-card').length === 3, 'Expected three project cards');
-console.assert(document.getElementById('year'), 'Footer year element is missing');

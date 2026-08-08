@@ -24,3 +24,7 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+push_api.py
+*.backup
+gta5-fam-bot/*.json
+portfolio/style_pretty.css
