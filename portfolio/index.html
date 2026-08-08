@@ -1,83 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dev Portfolio — Python / JS разработчик</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Портфолио Киберта — Python и JavaScript разработчика.">
+  <title>Киберт — Python & JavaScript разработчик</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">Dev<span>Portfolio</span></a>
-            <div class="nav-links">
-                <a href="#about">Обо мне</a>
-                <a href="#projects">Проекты</a>
-                <a href="#skills">Навыки</a>
-                <a href="#contact">Контакты</a>
-            </div>
-        </div>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="На главную"><span class="brand-mark">K</span><span>kibert<span class="brand-dot">.</span>dev</span></a>
+    <nav class="nav" aria-label="Основная навигация">
+      <a href="#about">Обо мне</a><a href="#projects">Проекты</a><a href="#skills">Навыки</a><a href="#contact">Контакты</a>
     </nav>
+    <a class="header-cta" href="https://t.me/your_telegram" target="_blank" rel="noreferrer">Обсудить проект <span>↗</span></a>
+  </header>
 
-    <header class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <h1>Python &amp; JS<br>разработчик</h1>
-            <p>Пишу Telegram-ботов, веб-приложения и игры. Беру заказы на фриланс.</p>
-            <a href="#projects" class="hero-btn">Смотреть работы</a>
-            <a href="#contact" class="hero-btn ghost">Связаться</a>
-        </div>
-    </header>
-
-    <section id="about" class="section">
-        <div class="container">
-            <h2>Обо мне</h2>
-            <p class="lead">
-                Начинающий, но практикующий разработчик. Имею реальные проекты на Python (discord.py, pygame)
-                и JavaScript (HTML/CSS/Node.js). Умею доводить задачу до рабочего результата, а не только
-                «написать код». Работаю честно, сдаю в срок.
-            </p>
-        </div>
+  <main id="top">
+    <section class="hero section-wrap">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="status-dot"></span> Открыт к новым задачам</p>
+        <h1>Код, который<br><em>работает.</em></h1>
+        <p class="hero-text">Python & JavaScript разработчик. Создаю Telegram-ботов, веб-приложения и игры — от идеи до рабочего результата.</p>
+        <div class="hero-actions"><a class="button button-primary" href="#projects">Смотреть проекты <span>↓</span></a><a class="text-link" href="#contact">Написать мне <span>↗</span></a></div>
+      </div>
+      <div class="hero-visual reveal delay-1" aria-label="Декоративная графика">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orb orb-one"></div><div class="orb orb-two"></div>
+        <div class="code-card"><div class="code-top"><span></span><span></span><span></span><b>developer.py</b></div><pre><code><span class="purple">class</span> <span class="blue">Developer</span>:
+  <span class="purple">def</span> <span class="yellow">build</span>(self):
+    <span class="pink">return</span> <span class="green">"something useful"</span></code></pre></div>
+        <div class="hero-tag tag-top">// 01 — create</div><div class="hero-tag tag-bottom">python <span>+</span> javascript</div>
+      </div>
     </section>
 
-    <section id="projects" class="section dark">
-        <div class="container">
-            <h2>Проекты</h2>
-            <div class="cards" id="projectGrid"></div>
-        </div>
-    </section>
+    <section id="about" class="about section-wrap reveal"><div class="section-label">01 / Обо мне</div><div><h2>Разработчик,<br><span>которому не всё равно.</span></h2><p class="body-copy">Начинающий, но практикующий разработчик. У меня есть реальные проекты на Python и JavaScript, а главное — привычка доводить задачу до конца. Не просто пишу код, а разбираюсь, как сделать продукт понятным и полезным.</p><a class="text-link" href="#contact">Давайте знакомиться <span>↗</span></a></div></section>
 
-    <section id="skills" class="section">
-        <div class="container">
-            <h2>Навыки</h2>
-            <div class="skills-grid">
-                <div class="skill"><span class="skill-name">Python</span><span class="skill-lvl">discord.py, pygame, aiogram</span></div>
-                <div class="skill"><span class="skill-name">JavaScript</span><span class="skill-lvl">HTML, CSS, Node.js</span></div>
-                <div class="skill"><span class="skill-name">Backend</span><span class="skill-lvl">Express, WebSocket, REST</span></div>
-                <div class="skill"><span class="skill-name">Frontend</span><span class="skill-lvl">Адаптивная вёрстка, SPA</span></div>
-                <div class="skill"><span class="skill-name">Боты</span><span class="skill-lvl">Telegram, Discord, модерация</span></div>
-                <div class="skill"><span class="skill-name">Игры</span><span class="skill-lvl">Pygame (2D, аркады)</span></div>
-            </div>
-        </div>
-    </section>
+    <section id="projects" class="projects section-wrap"><div class="section-heading reveal"><div class="section-label">02 / Избранные проекты</div><p>Небольшая подборка того, что<br>я уже умею делать.</p></div><div class="project-grid">
+      <article class="project-card project-dark reveal"><div class="project-meta"><span>01</span><span>Python · Discord</span></div><div class="project-art bot-art"><div class="bot-window"><div class="bot-avatar">B</div><div><strong>Bot online</strong><small>Модерация · тикеты · роли</small></div><i>●</i></div><div class="bot-lines"><span></span><span></span><span></span></div></div><div class="project-info"><h3>Discord-бот</h3><p>Бот для модерации сообщества с системой тикетов, предупреждений и логированием.</p><a href="https://github.com/kibert117" target="_blank" rel="noreferrer">Смотреть на GitHub ↗</a></div></article>
+      <article class="project-card project-orange reveal delay-1"><div class="project-meta"><span>02</span><span>JavaScript · Express</span></div><div class="project-art store-art"><div class="store-window"><div class="store-nav">tech<span>store</span><b>⌕</b></div><div class="store-product"><div class="product-circle"></div><div><small>NEW COLLECTION</small><strong>Tech<br>for life.</strong></div></div></div></div><div class="project-info"><h3>Tech Store</h3><p>Адаптивный интернет-магазин с аккуратным интерфейсом и удобной навигацией.</p><a href="https://github.com/kibert117" target="_blank" rel="noreferrer">Смотреть на GitHub ↗</a></div></article>
+      <article class="project-card project-green reveal"><div class="project-meta"><span>03</span><span>Python · Pygame</span></div><div class="project-art game-art"><div class="game-screen"><div class="game-score">SCORE 002450</div><div class="game-player"></div><div class="game-block block-a"></div><div class="game-block block-b"></div><div class="game-floor"></div></div></div><div class="project-info"><h3>2D-игры</h3><p>Набор небольших игр на Pygame: механики, уровни, управление и игровой цикл.</p><a href="https://github.com/kibert117" target="_blank" rel="noreferrer">Смотреть на GitHub ↗</a></div></article>
+    </div></section>
 
-    <section id="contact" class="section dark">
-        <div class="container">
-            <h2>Контакты</h2>
-            <p class="lead">Пишите — обсудим задачу и сроки.</p>
-            <div class="contacts">
-                <a href="https://t.me/your_telegram" class="contact-btn">Telegram</a>
-                <a href="mailto:you@example.com" class="contact-btn">Email</a>
-                <a href="https://github.com/kibert117" class="contact-btn">GitHub</a>
-            </div>
-            <p class="note">Замените ссылки на свои в файле index.html (строки с your_telegram / kibert117 / you@example.com).</p>
-        </div>
-    </section>
+    <section id="skills" class="skills section-wrap"><div class="section-label">03 / Инструменты</div><div class="skills-content"><h2>Стек,<br><span>которым я владею.</span></h2><div class="skills-list"><div><b>01</b><strong>Python</strong><p>discord.py · pygame · aiogram</p></div><div><b>02</b><strong>JavaScript</strong><p>HTML · CSS · Node.js · Express</p></div><div><b>03</b><strong>Backend</strong><p>REST · WebSocket · базы данных</p></div><div><b>04</b><strong>Frontend</strong><p>Адаптивная вёрстка · SPA</p></div></div></div></section>
 
-    <footer class="footer">
-        <p>© <span id="year"></span> Dev Portfolio. Собрано на коленке, но работает.</p>
-    </footer>
-
-    <script src="script.js"></script>
+    <section id="contact" class="contact section-wrap reveal"><div class="contact-mark">↗</div><div class="section-label">04 / Контакты</div><div><h2>Есть идея?<br><em>Давайте обсудим.</em></h2><p>Пишите — разберём задачу, сроки и найдём лучшее решение.</p><div class="contact-links"><a href="https://t.me/your_telegram" target="_blank" rel="noreferrer">Telegram <span>↗</span></a><a href="mailto:you@example.com">Email <span>↗</span></a><a href="https://github.com/kibert117" target="_blank" rel="noreferrer">GitHub <span>↗</span></a></div></div></section>
+  </main>
+  <footer class="footer section-wrap"><span>© <span id="year"></span> kibert.dev</span><span>Собрано с вниманием к деталям.</span><a href="#top">Наверх ↑</a></footer>
+  <script src="script.js"></script>
 </body>
 </html>
