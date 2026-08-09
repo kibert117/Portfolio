@@ -3,61 +3,59 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#121212">
-  <meta name="description" content="kibert117 — Python и JavaScript разработчик. Боты, сайты и игры.">
-  <title>kibert// — developer portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script>document.documentElement.classList.add('js')</script>
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="kibert.dev — Python и JavaScript разработчик. Боты, веб-приложения и игры.">
+  <title>kibert.dev — разработчик</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <a class="skip-link" href="#main">Перейти к содержимому</a>
-  <div class="noise" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="logo" href="#top" aria-label="На главную">kibert<span>//</span></a>
-    <nav aria-label="Навигация"><a href="#work">проекты</a><a href="#about">обо мне</a><a href="#contact">контакты</a></nav>
-    <a class="availability" href="https://github.com/kibert117" target="_blank" rel="noreferrer"><i></i> github ↗</a>
+  <header class="site-header">
+    <a class="brand" href="#top">kibert.dev</a>
+    <nav aria-label="Основная навигация">
+      <a href="#about">Обо мне</a><a href="#projects">Проекты</a><a href="#skills">Навыки</a><a href="#contact">Контакты</a>
+    </nav>
+    <a class="github" href="https://github.com/kibert117" target="_blank" rel="noreferrer">Мой GitHub ↗</a>
   </header>
 
-  <main id="main">
-    <section id="top" class="hero wrap">
-      <div class="hero-side mono">[ 01 ]<br>selected work<br>2026</div>
-      <div class="hero-content reveal">
-        <p class="kicker">// Python & JavaScript developer</p>
-        <h1>Делаю<br><span>работающие</span><br>вещи<span class="red">.</span></h1>
-        <p class="intro">Боты, веб-приложения и игры. Без лишнего шума — от идеи до результата, который можно открыть, запустить и использовать.</p>
-        <div class="hero-links"><a class="btn" href="#work">Смотреть проекты <b>↓</b></a><a class="underlined" href="#contact">Связаться ↗</a></div>
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="status">Открыт к новым задачам</p>
+      <div class="hero-title-wrap">
+        <p class="ghost ghost-one">developer.py</p>
+        <p class="ghost ghost-two">python + javascript</p>
+        <h1 id="hero-title">Код,<br>который<br><em>работает.</em></h1>
       </div>
-      <div class="hero-art reveal delay" aria-hidden="true">
-        <div class="art-ring ring-a"></div><div class="art-ring ring-b"></div><div class="art-cross">+</div>
-        <div class="terminal"><div class="terminal-head"><span>●</span><span>●</span><span>●</span><b>kibert.py</b></div><div><em>const</em> idea = <strong>"useful"</strong>;<br><em>while</em> (idea) {<br>&nbsp;&nbsp;build<span class="red">(</span>idea<span class="red">)</span>;<br>}</div></div>
-        <div class="art-label mono">BUILD / SHIP / REPEAT</div>
-      </div>
-    </section>
-
-    <div class="ticker" aria-label="Технологии"><div>PYTHON <b>✳</b> JAVASCRIPT <b>✳</b> BOTS <b>✳</b> WEB <b>✳</b> PYGAME <b>✳</b> PYTHON <b>✳</b> JAVASCRIPT <b>✳</b> BOTS <b>✳</b> WEB <b>✳</b></div></div>
-
-    <section id="work" class="work wrap">
-      <div class="section-top reveal"><p class="section-number">[ 02 ]</p><div><p class="kicker">// selected projects</p><h2>Что я уже<br><i>собрал.</i></h2></div><p class="section-note">Шесть реальных проектов<br>из моего GitHub.</p></div>
-      <div class="project-list">
-        <a class="project project-one reveal" href="https://github.com/kibert117/Portfolio/tree/main/gta5-fam-bot" target="_blank" rel="noreferrer"><div class="project-number">01</div><div class="project-visual visual-bot"><div class="bot-ui"><span class="online"></span> BOT ONLINE <b>✦</b><small>moderation / tickets / roles</small></div></div><div class="project-copy"><p class="mono">PYTHON · DISCORD.PY</p><h3>GTA5 Fam Bot</h3><p>Модерация сообщества, тикеты, предупреждения, роли и серверные команды.</p></div><span class="project-arrow">↗</span></a>
-        <a class="project project-two reveal" href="https://github.com/kibert117/Portfolio/tree/main/discord-rpc" target="_blank" rel="noreferrer"><div class="project-number">02</div><div class="project-visual visual-rpc"><div class="rpc-card"><span>NOW PLAYING</span><strong>Discord RPC</strong><i>●</i></div></div><div class="project-copy"><p class="mono">NODE.JS · EXPRESS · WS</p><h3>RPC Manager</h3><p>Локальный менеджер Discord Rich Presence с профилями активности.</p></div><span class="project-arrow">↗</span></a>
-        <a class="project project-three reveal" href="https://github.com/kibert117/Portfolio/tree/main/project1" target="_blank" rel="noreferrer"><div class="project-number">03</div><div class="project-visual visual-game"><div class="game-ui"><span>SCORE 002450</span><b>▰</b><i>▰ ▰ ▰</i></div></div><div class="project-copy"><p class="mono">PYTHON · PYGAME</p><h3>Pygame Games</h3><p>Коллекция из шести 2D-игр: Snake, Rocket, DOOM Legacy и другие эксперименты.</p></div><span class="project-arrow">↗</span></a>
-        <a class="project project-four reveal" href="https://github.com/kibert117/Portfolio/tree/main/tech-store" target="_blank" rel="noreferrer"><div class="project-number">04</div><div class="project-visual visual-store"><div class="store-ui"><small>TECH / 2026</small><strong>STORE<span>.</span></strong><div></div></div></div><div class="project-copy"><p class="mono">HTML · CSS · JAVASCRIPT</p><h3>Tech Store</h3><p>Интерактивный магазин техники с каталогом, поиском, корзиной и модальными окнами.</p></div><span class="project-arrow">↗</span></a>
-        <a class="project project-five reveal" href="https://github.com/kibert117/Portfolio/tree/main/tg_bot_template" target="_blank" rel="noreferrer"><div class="project-number">05</div><div class="project-visual visual-tg"><div class="tg-ui">✈<br><small>NEW REQUEST</small></div></div><div class="project-copy"><p class="mono">PYTHON · AIOGRAM · SQLITE</p><h3>TG Bot Template</h3><p>Каркас Telegram-бота для заявок, уведомлений администратору и простой админки.</p></div><span class="project-arrow">↗</span></a>
-        <a class="project project-six reveal" href="https://github.com/kibert117/Portfolio/tree/main/portfolio" target="_blank" rel="noreferrer"><div class="project-number">06</div><div class="project-visual visual-site"><div class="site-ui"><span>kibert</span><b>//</b></div></div><div class="project-copy"><p class="mono">HTML · CSS · JS</p><h3>This portfolio</h3><p>Сайт-портфолио: типографика, адаптив, микровзаимодействия и CSS-визуалы без битых картинок.</p></div><span class="project-arrow">↗</span></a>
+      <div class="hero-bottom">
+        <div>
+          <p class="role"><strong>Python &amp;<br>JavaScript</strong><br>разработчик.</p>
+          <p class="lead">Создаю Telegram-ботов,<br>веб-приложения и игры — от идеи<br>до рабочего результата.</p>
+        </div>
+        <div class="hero-actions"><a href="#projects">Смотреть<br>проекты <span>↓</span></a><a href="#contact">Написать мне ↗</a></div>
       </div>
     </section>
 
-    <section id="about" class="about wrap"><div class="section-number reveal">[ 03 ]</div><div class="about-grid"><div class="reveal"><p class="kicker">// a little about me</p><h2>Не просто<br><i>пишу код.</i></h2></div><div class="about-text reveal"><p>Я начинающий, но практикующий разработчик. Люблю разбирать задачу до сути и собирать решение, которое не стыдно показать.</p><p>Мой рабочий стек — Python, JavaScript и немного упрямства. Сейчас развиваюсь в backend, API и создании понятных интерфейсов.</p><div class="facts"><span><b>06</b> проектов</span><span><b>02</b> языка</span><span><b>∞</b> идей</span></div></div></div></section>
+    <section id="about" class="section about">
+      <p class="eyebrow">01 / Обо мне</p>
+      <div><h2>Разработчик,<br><em>которому не всё равно.</em></h2><p>Начинающий, но практикующий разработчик. Разбираю задачу до сути и собираю решение, которое можно открыть, запустить и использовать.</p><a class="text-link" href="#contact">Давайте знакомиться ↗</a></div>
+    </section>
 
-    <section class="services wrap"><div class="section-number">[ 04 ]</div><div><p class="kicker">// available for</p><h2>Могу помочь<br><i>с задачей.</i></h2><div class="service-list"><div><b>01</b><strong>Telegram / Discord боты</strong><span>заявки · тикеты · модерация</span></div><div><b>02</b><strong>Сайты и лендинги</strong><span>адаптив · интерфейс · анимации</span></div><div><b>03</b><strong>Доработка кода</strong><span>фиксы · API · Python / JS</span></div></div></div></section>
+    <section id="projects" class="section projects">
+      <p class="eyebrow">02 / Избранные проекты</p>
+      <div><h2>Небольшая подборка того,<br><em>что я уже умею делать.</em></h2>
+        <div class="project-grid">
+          <a class="project" href="https://github.com/kibert117/gta5-fam-bot" target="_blank" rel="noreferrer"><span>01</span><div class="project-art bot-art"><b>BOT ONLINE</b><small>moderation · tickets · roles</small></div><h3>GTA5 Fam Bot <i>↗</i></h3><p>Python · Discord.py</p><strong>Модерация сообщества, тикеты, предупреждения и роли.</strong></a>
+          <a class="project" href="https://github.com/kibert117/tech-store" target="_blank" rel="noreferrer"><span>02</span><div class="project-art store-art"><b>techstore</b><small>NEW COLLECTION</small></div><h3>Tech Store <i>↗</i></h3><p>HTML · CSS · JavaScript</p><strong>Адаптивный интернет-магазин с каталогом, поиском и корзиной.</strong></a>
+          <a class="project" href="https://github.com/kibert117/project1" target="_blank" rel="noreferrer"><span>03</span><div class="project-art game-art"><b>SCORE 002450</b><small>▰ ▰ ▰</small></div><h3>2D-игры <i>↗</i></h3><p>Python · Pygame</p><strong>Набор небольших игр: механики, уровни, управление и игровой цикл.</strong></a>
+          <a class="project" href="https://github.com/kibert117/discord-rpc" target="_blank" rel="noreferrer"><span>04</span><div class="project-art rpc-art"><b>NOW PLAYING</b><small>Discord RPC ●</small></div><h3>RPC Manager <i>↗</i></h3><p>Node.js · Express · WebSocket</p><strong>Локальный менеджер Discord Rich Presence с профилями активности.</strong></a>
+        </div>
+      </div>
+    </section>
 
-    <section id="contact" class="contact wrap"><div class="contact-symbol" aria-hidden="true">↗</div><p class="section-number">[ 05 ]</p><div><p class="kicker">// let's make something</p><h2>Есть идея?<br><i>Пиши.</i></h2><p class="contact-text">Расскажи, что нужно сделать. Обсудим задачу, сроки и следующий шаг.</p><a class="btn light" href="https://github.com/kibert117" target="_blank" rel="noreferrer">Написать в GitHub ↗</a></div></section>
+    <section id="skills" class="section skills"><p class="eyebrow">03 / Навыки</p><div><h2>Стек,<br><em>которым я владею.</em></h2><ul><li><b>01</b><strong>Python</strong><span>discord.py · pygame · aiogram</span></li><li><b>02</b><strong>JavaScript</strong><span>HTML · CSS · Node.js · Express</span></li><li><b>03</b><strong>Backend</strong><span>REST · WebSocket · базы данных</span></li><li><b>04</b><strong>Frontend</strong><span>Адаптивная вёрстка · интерфейсы</span></li></ul></div></section>
+
+    <section id="contact" class="contact"><div class="contact-inner"><p class="eyebrow">04 / Контакты</p><h2>Есть идея?<br><em>Давайте обсудим.</em></h2><p>Пишите — разберём задачу, сроки и найдём лучшее решение.</p><a class="contact-link" href="https://github.com/kibert117" target="_blank" rel="noreferrer">GitHub ↗</a></div><div class="contact-mark">↗</div></section>
   </main>
-  <footer class="footer wrap"><span>© 2026 kibert//</span><span class="mono">made with code & curiosity</span><a href="#top">наверх ↑</a></footer>
+  <footer><span>© <span id="year">2026</span> kibert.dev</span><span>Собрано с вниманием к деталям.</span><a href="#top">Наверх ↑</a></footer>
   <script src="script.js"></script>
 </body>
 </html>
