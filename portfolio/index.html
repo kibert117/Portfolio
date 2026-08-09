@@ -1,65 +1,294 @@
-<!doctype html>
-<html lang="ru">
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080808">
-  <meta name="description" content="kibert — Python и JavaScript разработчик. Telegram-боты, веб-приложения и игры.">
-  <title>kibert// — разработчик</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="description" content="Портфолио Киберта (kibert117) — Python/JavaScript разработчик: Telegram и Discord боты, веб-приложения, 2D-игры на Pygame.">
+  <title>Киберт (kibert117) — Python/JS разработчик // боты · веб · игры</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body id="top">
-  <div class="grain" aria-hidden="true"></div>
-  <header class="topnav">
-    <a class="chip chip-brand" href="#top">//kibert}</a>
-    <nav aria-label="Основная навигация">
-      <a class="chip" href="#web">{веб проекты}</a>
-      <a class="chip" href="#me">{обо мне}</a>
-      <a class="chip" href="#all">{все проекты}</a>
-      <a class="chip" href="#media">{контакты}</a>
-    </nav>
-    <span class="header-status"><i></i> open_to_work</span>
+<body>
+  <a class="skip-link" href="#portfolio">Перейти к проектам</a>
+
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="kibert117 — в начало">
+      {Киберт} <span>// kibert117 — Python + JavaScript</span>
+    </a>
+
+    <div class="header-actions">
+      <nav class="main-nav" aria-label="Навигация по портфолио">
+        <button class="nav-button is-active" type="button" data-filter="all">{все проекты}</button>
+        <button class="nav-button" type="button" data-filter="web">{веб}</button>
+        <button class="nav-button" type="button" data-filter="bots">{боты}</button>
+        <button class="nav-button" type="button" data-filter="games">{игры}</button>
+        <button class="nav-button" type="button" data-scroll="about">{обо мне}</button>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему" aria-pressed="false">
+        <span class="theme-icon" aria-hidden="true">☾</span>
+        <span class="theme-label">dark</span>
+      </button>
+    </div>
   </header>
 
   <main>
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-noise" aria-hidden="true">01001011 01001001 01000010 01000101 01010010 01010100<br>░▒▓ // python // javascript // discord // pygame ▓▒░<br>10101010 00110011 01010101 01101010 01000011<br>{ build(); } [ ship(); ] &lt; repeat / improve &gt;</div>
-      <div class="hero-kicker"><span>01 / identity</span><span>python + javascript</span><span>2026 — online</span></div>
-      <div class="hero-copy">
-        <p class="hero-intro">Привет, я Киберт<span class="red">//</span></p>
-        <h1 id="hero-title">КИБЕРТ<span class="red">//</span></h1>
-        <p class="hero-role">разработчик <span class="red">&lt;code /&gt;</span></p>
-        <p class="hero-description">Собираю Telegram-ботов, веб-приложения<br class="desktop-only"> и игры — от идеи до рабочего результата.</p>
+      <div>
+        <div class="eyebrow">// portfolio / kibert117 / 2025</div>
+        <h1 class="hero-title" id="hero-title">Привет, я<br><span class="muted-line">Киберт //kibert117</span></h1>
+        <p class="hero-copy">
+          Пишу на Python и JavaScript. Делаю Telegram и Discord ботов, верстаю сайты без лишних зависимостей и собираю 2D-игры на Pygame. Довожу проекты до состояния, когда ими можно пользоваться.
+        </p>
+        <div class="tags-cloud" aria-label="Стек">
+          <span class="tag">{python}</span>
+          <span class="tag">{javascript}</span>
+          <span class="tag">{discord.py}</span>
+          <span class="tag">{aiogram}</span>
+          <span class="tag">{pygame}</span>
+          <span class="tag">{node.js}</span>
+          <span class="tag">{express}</span>
+          <span class="tag">{websocket}</span>
+          <span class="tag">{html}</span>
+          <span class="tag">{css}</span>
+          <span class="tag">{git}</span>
+          <span class="tag">{github}</span>
+        </div>
       </div>
-      <div class="hero-bottom">
-        <div class="hero-stack"><span>[ python ]</span><span>[ javascript ]</span><span>[ bots ]</span><span>[ games ]</span></div>
-        <a class="hero-cta" href="#web">[ смотреть проекты ] <b>↓</b></a>
-      </div>
-      <div class="hero-index" aria-hidden="true">K/117<br><span>scroll to explore</span></div>
+
+      <aside class="hero-side" aria-label="Статус и контакты">
+        <div class="status"><span class="status-dot" aria-hidden="true"></span><span>открыт к задачам</span></div>
+        <div class="status-label">focus</div>
+        <p>Боты, веб и игры. Работаю через гарант / Safe Deal. Открыт для фриланс-задач и совместных проектов.</p>
+      </aside>
     </section>
 
-    <section id="web" class="cases section-shell">
-      <div class="section-head"><span class="section-index">02 / work</span><h2>{веб проекты}<span class="red"> //</span></h2><p>Небольшая подборка проектов,<br>которые уже работают.</p></div>
-      <div class="case-grid">
-        <article class="case"><div class="case-art"><span class="art-label">BOT ONLINE</span><strong>GTA5<br>FAM</strong><span class="art-code">tickets / roles / mod<br>python: true</span></div><div class="case-info"><p class="case-meta">01 // discord bot · python</p><h3>GTA5 FAM BOT<span class="red">//</span></h3><p>Модерация сообщества, тикеты, предупреждения, роли и автоматизация рутинных задач.</p><a href="https://github.com/kibert117/gta5-fam-bot" target="_blank" rel="noreferrer noopener">/ смотреть код ↗</a></div></article>
-        <article class="case"><div class="case-art case-art-light"><span class="art-label">NEW COLLECTION</span><strong>TECH<br>STORE</strong><span class="art-code">catalog / search / cart<br>html: true</span></div><div class="case-info"><p class="case-meta">02 // web store · frontend</p><h3>TECH STORE<span class="red">//</span></h3><p>Адаптивный магазин техники с каталогом, поиском, карточками товаров и корзиной.</p><a href="https://github.com/kibert117/tech-store" target="_blank" rel="noreferrer noopener">/ смотреть код ↗</a></div></article>
-        <article class="case"><div class="case-art case-art-grid"><span class="art-label">SCORE 002450</span><strong>PY<br>GAME</strong><span class="art-code">level: 03 / lives: 3<br>pygame: true</span></div><div class="case-info"><p class="case-meta">03 // 2d games · pygame</p><h3>PYGAME PACK<span class="red">//</span></h3><p>Коллекция 2D-игр с уровнями, управлением, игровыми циклами и собственными механиками.</p><a href="https://github.com/kibert117/project1" target="_blank" rel="noreferrer noopener">/ смотреть код ↗</a></div></article>
-        <article class="case"><div class="case-art case-art-line"><span class="art-label">NOW PLAYING</span><strong>RPC<br>MANAGER</strong><span class="art-code">ws://connected<br>node: true</span></div><div class="case-info"><p class="case-meta">04 // desktop tool · node.js</p><h3>DISCORD RPC<span class="red">//</span></h3><p>Локальный менеджер Discord Rich Presence с профилями активности и WebSocket-связью.</p><a href="https://github.com/kibert117/discord-rpc" target="_blank" rel="noreferrer noopener">/ смотреть код ↗</a></div></article>
+    <section id="portfolio" aria-labelledby="portfolio-title">
+      <div class="section-heading">
+        <h2 id="portfolio-title">Проекты / Избранное</h2>
+        <span class="section-count" id="projectCount">06 проектов</span>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        <article class="project-card" data-category="bots" data-project="gta5">
+          <div>
+            <div class="card-topline">
+              <span class="project-index">[01]</span>
+              <span class="card-meta">python / discord.py</span>
+            </div>
+            <h3 class="card-title">GTA5 FAM BOT//</h3>
+            <p class="card-desc">Discord-бот для сообщества: модерация, система тикетов, авто-роли и утилиты. Собран на discord.py.</p>
+            <div class="card-tags">
+              <span class="tag card-tag">{discord.py}</span>
+              <span class="tag card-tag">{модерация}</span>
+              <span class="tag card-tag">{тикеты}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta">bots</span>
+            <div class="card-actions">
+              <button class="card-link" type="button" data-open-project="gta5">/ кейс <span aria-hidden="true">↗</span></button>
+              <a class="card-link" href="https://github.com/kibert117/Portfolio/tree/main/gta5-fam-bot" target="_blank" rel="noopener noreferrer">/ код <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="bots" data-project="rpc">
+          <div>
+            <div class="card-topline">
+              <span class="project-index">[02]</span>
+              <span class="card-meta">node.js / express / ws</span>
+            </div>
+            <h3 class="card-title">DISCORD RPC//</h3>
+            <p class="card-desc">Менеджер Discord Rich Presence с веб-панелью. Node.js + Express + WebSocket, управление статусом в браузере.</p>
+            <div class="card-tags">
+              <span class="tag card-tag">{node.js}</span>
+              <span class="tag card-tag">{express}</span>
+              <span class="tag card-tag">{websocket}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta">bots</span>
+            <div class="card-actions">
+              <button class="card-link" type="button" data-open-project="rpc">/ кейс <span aria-hidden="true">↗</span></button>
+              <a class="card-link" href="https://github.com/kibert117/Portfolio/tree/main/discord-rpc" target="_blank" rel="noopener noreferrer">/ код <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="games" data-project="pygame">
+          <div>
+            <div class="card-topline">
+              <span class="project-index">[03]</span>
+              <span class="card-meta">python / pygame</span>
+            </div>
+            <h3 class="card-title">PYGAME PACK//</h3>
+            <p class="card-desc">Коллекция из 6 игр на Pygame с собственными механиками: Змейка, Rocket, DOOM Legacy и другие.</p>
+            <div class="card-tags">
+              <span class="tag card-tag">{pygame}</span>
+              <span class="tag card-tag">{2d}</span>
+              <span class="tag card-tag">{игры}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta">games</span>
+            <div class="card-actions">
+              <button class="card-link" type="button" data-open-project="pygame">/ кейс <span aria-hidden="true">↗</span></button>
+              <a class="card-link" href="https://github.com/kibert117/Portfolio/tree/main/project1" target="_blank" rel="noopener noreferrer">/ код <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="web" data-project="store">
+          <div>
+            <div class="card-topline">
+              <span class="project-index">[04]</span>
+              <span class="card-meta">html / css / js</span>
+            </div>
+            <h3 class="card-title">TECH STORE//</h3>
+            <p class="card-desc">Магазин техники на чистом HTML/CSS/JS: каталог, поиск, корзина. Без фреймворков и сборщиков.</p>
+            <div class="card-tags">
+              <span class="tag card-tag">{html}</span>
+              <span class="tag card-tag">{css}</span>
+              <span class="tag card-tag">{vanilla js}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta">web</span>
+            <div class="card-actions">
+              <button class="card-link" type="button" data-open-project="store">/ кейс <span aria-hidden="true">↗</span></button>
+              <a class="card-link" href="../tech-store/" target="_blank" rel="noopener noreferrer">/ сайт <span aria-hidden="true">↗</span></a>
+              <a class="card-link" href="https://github.com/kibert117/Portfolio/tree/main/tech-store" target="_blank" rel="noopener noreferrer">/ код <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="bots" data-project="tgbot">
+          <div>
+            <div class="card-topline">
+              <span class="project-index">[05]</span>
+              <span class="card-meta">python / aiogram</span>
+            </div>
+            <h3 class="card-title">TG BOT TEMPLATE//</h3>
+            <p class="card-desc">Шаблон Telegram-бота на aiogram: заявки от пользователей + админка. Стартовая точка для новых проектов.</p>
+            <div class="card-tags">
+              <span class="tag card-tag">{aiogram}</span>
+              <span class="tag card-tag">{заявки}</span>
+              <span class="tag card-tag">{админка}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta">bots</span>
+            <div class="card-actions">
+              <button class="card-link" type="button" data-open-project="tgbot">/ кейс <span aria-hidden="true">↗</span></button>
+              <a class="card-link" href="https://github.com/kibert117/Portfolio/tree/main/tg_bot_template" target="_blank" rel="noopener noreferrer">/ код <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+
+        <article class="project-card" data-category="web" data-project="site">
+          <div>
+            <div class="card-topline">
+              <span class="project-index">[06]</span>
+              <span class="card-meta">html / css / js</span>
+            </div>
+            <h3 class="card-title">PORTFOLIO//</h3>
+            <p class="card-desc">Этот сайт: тёмная и светлая темы, фильтры проектов, модальные окна кейсов. Один файл стилей, ноль зависимостей.</p>
+            <div class="card-tags">
+              <span class="tag card-tag">{html}</span>
+              <span class="tag card-tag">{css}</span>
+              <span class="tag card-tag">{vanilla js}</span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <span class="card-meta">web</span>
+            <div class="card-actions">
+              <button class="card-link" type="button" data-open-project="site">/ кейс <span aria-hidden="true">↗</span></button>
+              <a class="card-link" href="https://github.com/kibert117/Portfolio/tree/main/portfolio" target="_blank" rel="noopener noreferrer">/ код <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
-    <section id="me" class="about section-shell">
-      <div class="section-head"><span class="section-index">03 / about</span><h2>{обо мне}<span class="red"> //</span></h2></div>
-      <div class="about-layout"><p class="about-statement">Делаю понятные<br><span class="red">рабочие решения.</span></p><div class="about-copy"><p>Я начинающий, но практикующий разработчик. Люблю разбираться в задаче до сути, собирать аккуратную структуру и доводить проект до состояния, когда им действительно можно пользоваться.</p><div class="tag-list"><span>[ telegram-боты ]</span><span>[ discord-боты ]</span><span>[ веб-приложения ]</span><span>[ 2d-игры ]</span><span>[ автоматизация ]</span></div></div></div>
-      <div class="tools"><span class="section-index">// toolkit</span><div><b>python</b><b>javascript</b><b>discord.py</b><b>aiogram</b><b>pygame</b><b>node.js</b><b>express</b><b>git</b></div></div>
+    <section class="about-section" id="about" aria-labelledby="about-title">
+      <div class="section-heading">
+        <h2 id="about-title">Обо мне & Стек</h2>
+        <span class="section-count">about / stack</span>
+      </div>
+
+      <div class="about-grid">
+        <div class="info-block">
+          <h3>// Подход</h3>
+          <p>Работаю по шагам: <strong>--идея</strong>, <strong>--прототип</strong>, <strong>--реализация</strong>, <strong>--тест</strong>, <strong>--релиз</strong>.</p>
+          <p>Стараюсь писать понятный код и доводить фичу до рабочего состояния, а не останавливаться на половине. Больше практики — меньше болтовни.</p>
+
+          <h3 class="tools-heading">// Чем могу помочь</h3>
+          <p>Telegram и Discord боты (модерация, тикеты, автоматизация), лендинги на чистом HTML/CSS/JS, доработка и фикс багов на Python/JS.</p>
+        </div>
+
+        <div class="exp-list" aria-label="Стек">
+          <div class="exp-item">
+            <div class="exp-company">[Python]</div>
+            <div class="exp-role">discord.py · aiogram · pygame</div>
+            <p>Боты, игры и скрипты. Асинхронность, работа с API, базы данных.</p>
+          </div>
+          <div class="exp-item">
+            <div class="exp-company">[JavaScript]</div>
+            <div class="exp-role">node.js · express · websocket · vanilla js</div>
+            <p>Серверные приложения,实时-панели, фронтенд без фреймворков.</p>
+          </div>
+          <div class="exp-item">
+            <div class="exp-company">[Веб]</div>
+            <div class="exp-role">html · css · адаптивная вёрстка</div>
+            <p>Сайты, которые открываются на телефоне и десктопе без костылей.</p>
+          </div>
+          <div class="exp-item">
+            <div class="exp-company">[Workflow]</div>
+            <div class="exp-role">git · github · rest api · sqlite</div>
+            <p>Контроль версий, деплой на GitHub Pages, интеграции по API.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="all" class="allworks section-shell"><div class="section-head"><span class="section-index">04 / index</span><h2>{все проекты}<span class="red"> //</span></h2></div><div class="worklist"><a href="https://github.com/kibert117/gta5-fam-bot" target="_blank" rel="noreferrer noopener"><b>GTA5 FAM BOT</b><span>discord bot / python</span><i>2025 ↗</i></a><a href="https://github.com/kibert117/tech-store" target="_blank" rel="noreferrer noopener"><b>TECH STORE</b><span>web store / frontend</span><i>2025 ↗</i></a><a href="https://github.com/kibert117/project1" target="_blank" rel="noreferrer noopener"><b>PYGAME PACK</b><span>2d games / pygame</span><i>2025 ↗</i></a><a href="https://github.com/kibert117/discord-rpc" target="_blank" rel="noreferrer noopener"><b>DISCORD RPC</b><span>desktop tool / node.js</span><i>2026 ↗</i></a><a href="https://github.com/kibert117/tg_bot_template" target="_blank" rel="noreferrer noopener"><b>TG BOT TEMPLATE</b><span>telegram / aiogram</span><i>2026 ↗</i></a></div></section>
-
-    <section id="media" class="contact section-shell"><div class="contact-card"><span class="section-index">05 / contact</span><h2>Есть идея<span class="red">?</span><br><em>Давайте обсудим.</em></h2><p>Пишите — разберём задачу, сроки и найдём решение.</p><a class="contact-button" href="https://github.com/kibert117" target="_blank" rel="noreferrer noopener">[ github: kibert117 ] ↗</a></div></section>
+    <section class="contact-section" aria-labelledby="contact-title">
+      <div>
+        <h2 id="contact-title">Есть задача?<br>Напиши — разберём.</h2>
+        <p>Telegram — самый быстрый канал. GitHub — исходники и живые проекты.</p>
+      </div>
+      <div class="contact-actions">
+        <a class="contact-button" href="https://t.me/kibert117" target="_blank" rel="noopener noreferrer">/ telegram <span aria-hidden="true">↗</span></a>
+        <a class="contact-button ghost" href="https://github.com/kibert117" target="_blank" rel="noopener noreferrer">/ github <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
   </main>
 
-  <footer><span>//kibert}</span><span>built with html · css · js</span><a href="#top">{ наверх ↑ }</a></footer>
+  <footer class="site-footer">
+    <div class="footer-code">kibert117 // 2025</div>
+    <div class="social-links">
+      <a href="https://t.me/kibert117" target="_blank" rel="noopener noreferrer">[телеграм]</a>
+      <a href="https://github.com/kibert117" target="_blank" rel="noopener noreferrer">[github]</a>
+      <a href="#top">[в начало]</a>
+    </div>
+  </footer>
+
+  <div class="modal" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-panel" role="document">
+      <div class="modal-header">
+        <div>
+          <div class="section-kicker" id="modalKicker">project / details</div>
+          <h2 class="modal-title" id="modalTitle">Кейс</h2>
+        </div>
+        <button class="modal-close" id="modalClose" type="button" aria-label="Закрыть окно">×</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
