@@ -3,103 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f3f0">
-  <meta name="description" content="kibert117 — разработчик Telegram-ботов, веб-приложений и игр.">
-  <title>kibert// — web & code</title>
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="kibert.dev — Python и JavaScript разработчик. Telegram-боты, веб-приложения и игры.">
+  <title>kibert.dev — разработчик</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="logo" href="#top">kibert//</a>
-    <nav class="main-nav" aria-label="Основная навигация">
-      <a href="#web">{веб проекты}</a>
-      <a href="#all">{все проекты}</a>
-      <a href="#about">{обо мне}</a>
-    </nav>
-    <div class="top-links">
-      <a href="https://github.com/kibert117" target="_blank" rel="noreferrer noopener">[github]</a>
-      <a href="#contact">[написать мне]</a>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="#top">kibert.dev</a>
+    <nav class="main-nav" aria-label="Основная навигация"><a href="#about">Обо мне</a><a href="#projects">Проекты</a><a href="#skills">Навыки</a><a href="#contact">Контакты</a></nav>
+    <a class="github-link" href="https://github.com/kibert117" target="_blank" rel="noreferrer noopener">Мой GitHub ↗</a>
   </header>
 
   <main id="top">
-    <section class="intro page-grid">
-      <div class="intro-copy">
-        <p class="micro">// kibert117 — python &amp; javascript</p>
-        <h1>Код,<br><em>который</em><br>работает.</h1>
-        <p class="intro-text">Разработчик, который собирает<br>ботов, интерфейсы и игры.</p>
-        <a class="arrow-link" href="#web">[смотреть проекты] ↓</a>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="status">Открыт к новым задачам</p>
+      <div class="hero-stage">
+        <span class="ghost ghost-developer" aria-hidden="true">developer.py</span>
+        <h1 id="hero-title">Код,<br>который<br><em>работает.</em></h1>
+        <span class="ghost ghost-stack" aria-hidden="true">python + javascript</span>
       </div>
-      <div class="intro-side" aria-hidden="true">
-        <span class="stamp">developer.py</span>
-        <span class="stamp stamp-bottom">python + javascript</span>
-        <span class="symbol">✳</span>
+      <div class="hero-footer">
+        <div class="intro-copy">
+          <p class="role"><strong>Python &amp; JavaScript</strong><br>разработчик.</p>
+          <p class="lead">Создаю Telegram-ботов, веб-приложения<br class="desktop-only"> и игры — от идеи до рабочего результата.</p>
+        </div>
+        <div class="hero-actions"><a class="projects-link" href="#projects">Смотреть<br>проекты <span>↓</span></a><a href="#contact">Написать мне ↗</a></div>
       </div>
     </section>
 
-    <section id="web" class="work-section page-grid">
-      <div class="section-label">{веб проекты}<br><span>/ 01</span></div>
-      <div class="work-content">
-        <div class="section-heading"><span>Избранные</span><em>проекты //</em></div>
+    <section id="about" class="content-section about-section">
+      <p class="section-label">01 / Обо мне</p>
+      <div class="section-main"><h2>Разработчик,<br><em>которому не всё равно.</em></h2><p>Разбираю задачу до сути и собираю решение, которое можно открыть, запустить и использовать. Работаю спокойно, последовательно и довожу начатое до результата.</p><a class="text-link" href="#contact">Давайте знакомиться ↗</a></div>
+    </section>
+
+    <section id="projects" class="content-section projects-section">
+      <p class="section-label">02 / Проекты</p>
+      <div class="section-main"><h2>То, что уже<br><em>работает.</em></h2>
         <div class="project-list">
-          <article class="case case-blue">
-            <div class="case-visual"><span class="visual-code">&lt;bot /&gt;</span><span class="visual-dot"></span><span class="visual-grid">· · · · ·<br>· · · · ·<br>· · · · ·</span></div>
-            <div class="case-meta"><span>{telegram bot}</span><span>{python}</span><span>// 01</span></div>
-            <h2>GTA5 Fam Bot<span>//</span></h2>
-            <p>Бот для управления Discord-сообществом: модерация, тикеты, роли и автоматизация рутинных задач.</p>
-            <a href="https://github.com/kibert117/gta5-fam-bot" target="_blank" rel="noreferrer noopener">[/смотреть проект] ↗</a>
-          </article>
-          <article class="case case-orange">
-            <div class="case-visual"><span class="visual-window">tech<br><b>store</b><i>_</i></span><span class="visual-cross">+</span><span class="visual-line"></span></div>
-            <div class="case-meta"><span>{интернет-магазин}</span><span>{frontend}</span><span>// 02</span></div>
-            <h2>Tech Store<span>//</span></h2>
-            <p>Адаптивный магазин техники с каталогом, поиском, карточками товаров и корзиной.</p>
-            <a href="https://github.com/kibert117/tech-store" target="_blank" rel="noreferrer noopener">[/смотреть проект] ↗</a>
-          </article>
-          <article class="case case-green">
-            <div class="case-visual"><span class="visual-score">SCORE 002450</span><span class="visual-player">▲</span><span class="visual-bars">▰ ▰ ▰</span></div>
-            <div class="case-meta"><span>{игры}</span><span>{pygame}</span><span>// 03</span></div>
-            <h2>Pygame collection<span>//</span></h2>
-            <p>Набор 2D-игр с игровыми циклами, уровнями, управлением и собственными механиками.</p>
-            <a href="https://github.com/kibert117/project1" target="_blank" rel="noreferrer noopener">[/смотреть проект] ↗</a>
-          </article>
-          <article class="case case-violet">
-            <div class="case-visual"><span class="visual-rpc">NOW<br>PLAYING</span><span class="visual-ring"></span><span class="visual-wave">∿∿∿</span></div>
-            <div class="case-meta"><span>{desktop tool}</span><span>{node.js}</span><span>// 04</span></div>
-            <h2>Discord RPC<span>//</span></h2>
-            <p>Локальный менеджер Discord Rich Presence с профилями активности и WebSocket-связью.</p>
-            <a href="https://github.com/kibert117/discord-rpc" target="_blank" rel="noreferrer noopener">[/смотреть проект] ↗</a>
-          </article>
+          <a class="project-row" href="https://github.com/kibert117/gta5-fam-bot" target="_blank" rel="noreferrer noopener"><span class="project-number">01</span><strong>GTA5 Fam Bot</strong><span>Python · Discord.py</span><i>↗</i></a>
+          <a class="project-row" href="https://github.com/kibert117/tech-store" target="_blank" rel="noreferrer noopener"><span class="project-number">02</span><strong>Tech Store</strong><span>HTML · CSS · JavaScript</span><i>↗</i></a>
+          <a class="project-row" href="https://github.com/kibert117/project1" target="_blank" rel="noreferrer noopener"><span class="project-number">03</span><strong>2D-игры</strong><span>Python · Pygame</span><i>↗</i></a>
+          <a class="project-row" href="https://github.com/kibert117/discord-rpc" target="_blank" rel="noreferrer noopener"><span class="project-number">04</span><strong>Discord RPC</strong><span>Node.js · Express · WebSocket</span><i>↗</i></a>
         </div>
       </div>
     </section>
 
-    <section id="all" class="about-section page-grid">
-      <div class="section-label">{все проекты}<br><span>/ 02</span></div>
-      <div class="about-content">
-        <div class="section-heading"><span>Не только</span><em>веб //</em></div>
-        <div class="simple-list"><a href="https://github.com/kibert117/tg_bot_template" target="_blank" rel="noreferrer noopener"><b>tg_bot_template</b><span>aiogram · шаблон Telegram-бота ↗</span></a><a href="https://github.com/kibert117/Portfolio" target="_blank" rel="noreferrer noopener"><b>Portfolio</b><span>HTML · CSS · JavaScript ↗</span></a></div>
-      </div>
+    <section id="skills" class="content-section skills-section">
+      <p class="section-label">03 / Навыки</p>
+      <div class="section-main"><h2>Мой<br><em>инструментарий.</em></h2><div class="skills-list"><div><b>01</b><strong>Python</strong><span>discord.py · pygame · aiogram</span></div><div><b>02</b><strong>JavaScript</strong><span>HTML · CSS · Node.js · Express</span></div><div><b>03</b><strong>Интерфейсы</strong><span>адаптивная вёрстка · UX</span></div><div><b>04</b><strong>Backend</strong><span>REST · WebSocket · базы данных</span></div></div></div>
     </section>
 
-    <section id="about" class="bio-section page-grid">
-      <div class="section-label">{обо мне}<br><span>/ 03</span></div>
-      <div class="bio-content">
-        <div class="section-heading"><span>Привет,</span><em>я kibert //</em></div>
-        <p class="big-copy">Создаю Telegram-ботов, веб-приложения и игры — от идеи до рабочего результата.</p>
-        <p class="body-copy">Работаю с Python и JavaScript. Люблю разбираться в задаче, собирать понятную структуру и доводить проект до состояния, когда им действительно можно пользоваться.</p>
-        <div class="skills-line"><span>[python]</span><span>[javascript]</span><span>[discord.py]</span><span>[pygame]</span><span>[node.js]</span></div>
-      </div>
-    </section>
-
-    <section id="contact" class="contact-section page-grid">
-      <div class="section-label">{контакты}<br><span>/ 04</span></div>
-      <div class="contact-content"><div class="section-heading"><span>Есть идея?</span><em>Напиши мне //</em></div><p>Обсудим задачу, формат и соберём рабочее решение.</p><a class="contact-cta" href="https://github.com/kibert117" target="_blank" rel="noreferrer noopener">[github kibert117] ↗</a></div>
+    <section id="contact" class="contact-section content-section">
+      <p class="section-label">04 / Контакты</p>
+      <div class="section-main"><h2>Есть идея?<br><em>Давайте обсудим.</em></h2><p>Пишите — разберём задачу, сроки и найдём лучшее решение.</p><a class="contact-link" href="https://github.com/kibert117" target="_blank" rel="noreferrer noopener">GitHub kibert117 ↗</a></div>
     </section>
   </main>
 
-  <footer><span>kibert//</span><span>python + javascript</span><a href="#top">↑ наверх</a></footer>
+  <footer><span>© <span id="year">2026</span> kibert.dev</span><span>Python &amp; JavaScript</span><a href="#top">Наверх ↑</a></footer>
   <script src="script.js"></script>
 </body>
 </html>

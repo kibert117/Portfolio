@@ -26,10 +26,6 @@ if ('IntersectionObserver' in window) {
   sections.forEach((section) => observer.observe(section));
 }
 
-console.info('[portfolio] ready; CSS project visuals:', document.querySelectorAll('.case-visual').length);
-console.info('[portfolio] external images:', document.images.length);
-document.body.dataset.portfolioReady = 'true';
-
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.documentElement.style.scrollBehavior = 'auto';
 }
@@ -38,4 +34,6 @@ if (document.documentElement.scrollWidth > window.innerWidth + 1) {
   console.warn('[portfolio] horizontal overflow detected');
 }
 
+console.info('[portfolio] ready; image elements:', document.images.length);
+document.body.dataset.portfolioReady = 'true';
 void 0;
