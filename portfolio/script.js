@@ -10,48 +10,32 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   });
 });
 
-const header = document.querySelector('.site-header');
-const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 20);
-window.addEventListener('scroll', updateHeader, { passive: true });
-updateHeader();
-
 document.querySelectorAll('a[target="_blank"]').forEach((link) => {
   link.setAttribute('rel', 'noreferrer noopener');
 });
 
-const navLinks = [...document.querySelectorAll('.site-header nav a')];
 const sections = [...document.querySelectorAll('main section[id]')];
+const navLinks = [...document.querySelectorAll('.main-nav a')];
 if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (!entry.isIntersecting) return;
-      navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+      navLinks.forEach((link) => link.classList.toggle('active', link.hash === `#${entry.target.id}`));
     });
   }, { rootMargin: '-35% 0px -55% 0px' });
   sections.forEach((section) => observer.observe(section));
 }
 
-const style = document.createElement('style');
-style.textContent = '.site-header.scrolled{box-shadow:0 1px 0 #d9d9d9;background:rgba(255,255,255,.94)}.site-header nav a.active{font-weight:700;text-decoration:underline;text-underline-offset:4px}';
-document.head.appendChild(style);
-
-console.info('[portfolio] ready; css visuals:', document.querySelectorAll('.project-art').length);
-console.info('[portfolio] external images:', document.querySelectorAll('img').length);
-console.info('[portfolio] placeholders:', document.querySelectorAll('a[href*="you@example"], a[href*="your_telegram"]').length);
+console.info('[portfolio] ready; CSS project visuals:', document.querySelectorAll('.case-visual').length);
+console.info('[portfolio] external images:', document.images.length);
 document.body.dataset.portfolioReady = 'true';
-
-window.addEventListener('hashchange', () => {
-  const target = document.querySelector(window.location.hash);
-  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-});
-
-if (document.documentElement.scrollWidth > window.innerWidth + 1) {
-  console.warn('[portfolio] horizontal overflow detected');
-}
 
 if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   document.documentElement.style.scrollBehavior = 'auto';
 }
 
-// Сайт остаётся полностью статическим: внешние изображения и блокирующие загрузчики не используются.
+if (document.documentElement.scrollWidth > window.innerWidth + 1) {
+  console.warn('[portfolio] horizontal overflow detected');
+}
+
 void 0;
